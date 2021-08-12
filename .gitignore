@@ -1,3 +1,20 @@
+### PHPStorm configuration
+.idea/
+
+### PHP_CodeSnifer Cache
+.php_cs.cache
+
+### Symfony
+/bin/behat
+/bin/.phpunit
+/bin/doctrine*
+/bin/phpcbf
+/bin/phpcs
+/bin/php-parse
+/bin/var-dump-server
+/bin/csv2xlsx
+/bin/phantomjs
+/bin/database-anonymizer
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -13,8 +30,3 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###

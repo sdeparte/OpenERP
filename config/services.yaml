@@ -6,20 +6,26 @@
 parameters:
 
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
-            - '../src/Tests/'
+    App\ModelBundle\:
+        resource: '../src/ModelBundle'
+        exclude: '../src/ModelBundle/{Entity,DependencyInjection,Tests,Kernel.php}/'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Common\:
+        resource: '../src/Common'
+        exclude: '../src/Common/{Entity,DependencyInjection,Tests,Kernel.php}/'
+
+    App\Users\:
+        resource: '../src/Users'
+        exclude: '../src/Users/{Entity,DependencyInjection,Tests,Kernel.php}/'
+
+    App\AchatArticles\:
+        resource: '../src/AchatArticles'
+        exclude: '../src/AchatArticles/{Entity,DependencyInjection,Tests,Kernel.php}/'
+
+    App\VenteArticles\:
+        resource: '../src/AchatArticles'
+        exclude: '../src/AchatArticles/{Entity,DependencyInjection,Tests,Kernel.php}/'
