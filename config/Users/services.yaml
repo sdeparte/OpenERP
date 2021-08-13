@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Users\DataPersister\UtilisateurDataPersister:
+        arguments:
+            $docuementManager: '@doctrine_mongodb.odm.users_document_manager'

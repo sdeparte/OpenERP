@@ -1,0 +1,61 @@
+version: '3.5'
+
+services:
+  mongodb:
+    build: docker/mongodb
+    hostname: db.erp.docker
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=api-platform
+      - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
+    volumes:
+      - database:/var/lib/mongodb/data:rw
+    ports:
+      - 127.55.0.1:27017:27017
+
+  common-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_common.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: common.erp.docker
+    ports:
+      - 127.55.0.2:80:80
+      - 127.55.0.2:443:443
+    environment:
+      MICRO_SERVICE_NAME: Common
+      MICRO_SERVICE_HOST: common.erp.docker
+      API_VERSION: 0.1.0
+
+  users-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_users.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: users.erp.docker
+    ports:
+      - 127.55.0.3:80:80
+      - 127.55.0.3:443:443
+    environment:
+      MICRO_SERVICE_NAME: Users
+      MICRO_SERVICE_HOST: users.erp.docker
+      API_VERSION: 0.2.0
+
+  employes-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_employes.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: employes.erp.docker
+    ports:
+      - 127.55.0.4:80:80
+      - 127.55.0.4:443:443
+    environment:
+      MICRO_SERVICE_NAME: Employes
+      MICRO_SERVICE_HOST: employes.erp.docker
+      API_VERSION: 0.3.0
+
+volumes:
+  database: ~

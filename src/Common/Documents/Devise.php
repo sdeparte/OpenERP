@@ -1,42 +1,49 @@
 <?php
 
-namespace App\Common\Entity;
+namespace App\Common\Documents;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Devise
  *
- * @ORM\Table(name="devise")
- * @ORM\Entity(repositoryClass="SD\CommonBundle\Repository\DeviseRepository")
+ * @ApiResource
+ *
+ * @ODM\Document
  */
 class Devise
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ODM\Id(strategy="INCREMENT", type="int")
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=255)
+     * @ODM\Field
+     * @Assert\NotBlank
      */
     private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="abreviation", type="string", length=3)
+     * @ODM\Field
+     * @Assert\NotBlank
      */
     private $abreviation;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="symbole", type="string", length=10)
+     * @ODM\Field
+     * @Assert\NotBlank
      */
     private $symbole;
 
@@ -46,7 +53,7 @@ class Devise
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -58,7 +65,7 @@ class Devise
      *
      * @return Devise
      */
-    public function setNom($nom)
+    public function setNom($nom): Devise
     {
         $this->nom = ucfirst($nom);
 
@@ -66,23 +73,19 @@ class Devise
     }
 
     /**
-     * Get nom
-     *
      * @return string
      */
-    public function getNom()
+    public function getNom(): string
     {
         return $this->nom;
     }
 
     /**
-     * Set abreviation
-     *
      * @param string $abreviation
      *
      * @return Devise
      */
-    public function setAbreviation($abreviation)
+    public function setAbreviation($abreviation): Devise
     {
         $this->abreviation = strtoupper($abreviation);
 
@@ -90,23 +93,19 @@ class Devise
     }
 
     /**
-     * Get abreviation
-     *
      * @return string
      */
-    public function getAbreviation()
+    public function getAbreviation(): string
     {
         return $this->abreviation;
     }
 
     /**
-     * Set symbole
-     *
      * @param string $symbole
      *
      * @return Devise
      */
-    public function setSymbole($symbole)
+    public function setSymbole($symbole): Devise
     {
         $this->symbole = $symbole;
 
@@ -114,11 +113,9 @@ class Devise
     }
 
     /**
-     * Get symbole
-     *
      * @return string
      */
-    public function getSymbole()
+    public function getSymbole(): string
     {
         return $this->symbole;
     }
@@ -128,7 +125,7 @@ class Devise
      *
      * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return $this->symbole.' - '.$this->nom;
     }

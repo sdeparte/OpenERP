@@ -1,0 +1,40 @@
+doctrine_mongodb:
+  default_connection: default
+  default_document_manager: default
+  connections:
+    default:
+      server: "%env(MONGODB_URL)%"
+    users:
+      server: "%env(MONGODB_URL)%"
+    employes:
+      server: "%env(MONGODB_URL)%"
+  document_managers:
+    default:
+      connection: default
+      database: common
+      mappings:
+        Common:
+          type: annotation
+          dir: '%kernel.project_dir%/src/Common'
+          prefix: App\Common\Documents
+          is_bundle: false
+
+    users:
+      connection: users
+      database: users
+      mappings:
+        Users:
+          type: annotation
+          dir: '%kernel.project_dir%/src/Users'
+          prefix: App\Users\Documents
+          is_bundle: false
+
+    employes:
+      connection: employes
+      database: employes
+      mappings:
+        Users:
+          type: annotation
+          dir: '%kernel.project_dir%/src/Employes'
+          prefix: App\Employes\Documents
+          is_bundle: false

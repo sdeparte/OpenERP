@@ -3,14 +3,18 @@ security:
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        mongo_provider:
+            mongodb: {class: App\Users\Documents\Utilisateur, property: username}
+    password_hashers:
+        App\Users\Documents\Utilisateur:
+            algorithm: auto
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: mongo_provider
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

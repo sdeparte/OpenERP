@@ -2,7 +2,7 @@
 
 namespace App\ModelBundle\Validator;
 
-use App\ModelBundle\Checker\IriExistenceChecker;
+use App\ModelBundle\Checker\IriChecker;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 class IriValidator extends ConstraintValidator
 {
     /**
-     * @var IriExistenceChecker
+     * @var IriChecker
      */
     private $iriExistenceChecker;
 
@@ -21,7 +21,7 @@ class IriValidator extends ConstraintValidator
      */
     private $logger;
 
-    public function __construct(IriExistenceChecker $iriExistenceChecker, LoggerInterface $logger) {
+    public function __construct(IriChecker $iriExistenceChecker, LoggerInterface $logger) {
         $this->iriExistenceChecker = $iriExistenceChecker;
         $this->logger = $logger;
     }
@@ -55,6 +55,7 @@ class IriValidator extends ConstraintValidator
 
         $isArray = is_array($value);
         $value = $isArray ? $value : [$value];
+
         foreach ($value as $k => $iri) {
             if (!($checkedIris[$iri] ?? false)) {
                 $violation = $this->context->buildViolation($constraint->message)->setParameter('{{ iri }}', $iri);
