@@ -33,18 +33,20 @@ services:
       - 127.55.0.2:80:80
       - 127.55.0.2:443:443
 
-  global-api:
+  documentation-api:
     build: docker/php
     working_dir: /home/erp
     volumes:
       - .:/home/erp
-      - ./docker/php/vhost_common.conf:/etc/apache2/sites-available/000-default.conf
-    hostname: global.erp.docker
+      - ./docker/php/vhost_documentation.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: documentation.erp.docker
     ports:
       - 127.55.0.10:80:80
       - 127.55.0.10:443:443
     environment:
-      MICRO_SERVICE_NAME: Global
+      MICRO_SERVICE_URLS: 'http://common.erp.docker/;http://users.erp.docker/;http://employes.erp.docker/'
+      API_GATEWAY_URLS: 'http://127.55.0.2/;http://api.erp.docker/'
+      MICRO_SERVICE_NAME: Documentation
       API_VERSION: 0.0.0
 
   common-api:

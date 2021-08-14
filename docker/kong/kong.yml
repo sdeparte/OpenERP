@@ -2,13 +2,14 @@ _format_version: "2.1"
 _transform: true
 
 services:
-  - name: global
-    url: http://global.erp.docker
+  - name: documentation
+    url: http://documentation.erp.docker
     routes:
-      - name: global
+      - name: documentation-api
         strip_path: false
         paths:
           - /docs
+          - /bundles
 
   - name: common
     url: http://common.erp.docker

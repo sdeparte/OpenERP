@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  ApiPlatform\Core\Bridge\Symfony\Bundle\SwaggerUi\SwaggerUiContext: '@api_platform.swagger_ui.context'
+
+  App\Documentation\Controller\SwaggerUiAction:
+    tags: ['controller.service_arguments']

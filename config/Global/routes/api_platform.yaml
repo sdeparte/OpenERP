@@ -1,3 +1,0 @@
-swagger_ui:
-  path: /docs
-  controller: App\ModelBundle\Controller\SwaggerAction
