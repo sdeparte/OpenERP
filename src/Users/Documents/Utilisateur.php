@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     normalizationContext={"groups"={"user:read"}},
  *     denormalizationContext={"groups"={"user:write"}},
  *     collectionOperations={
+ *          "get",
  *          "post"={
  *              "validation_groups"={"Default", "create"},
  *          },

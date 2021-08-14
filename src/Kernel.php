@@ -58,15 +58,6 @@ class Kernel extends BaseKernel
         $defaultConfDir = $this->getProjectDir().'/config';
         $microServiceConfDir = $defaultConfDir.'/'.$this->getMicroServiceName();
 
-        $routes->import($defaultConfDir.'/{routes}/'.$this->environment.'/*.yaml');
-        $routes->import($defaultConfDir.'/{routes}/*.yaml');
-
-        if (is_file($defaultConfDir.'/routes.yaml')) {
-            $routes->import($defaultConfDir.'/routes.yaml');
-        } else {
-            $routes->import($defaultConfDir.'/{routes}.php');
-        }
-
         if (file_exists($microServiceConfDir)) {
             $routes->import($microServiceConfDir.'/{routes}/'.$this->environment.'/*.yaml');
             $routes->import($microServiceConfDir.'/{routes}/*.yaml');
@@ -76,6 +67,15 @@ class Kernel extends BaseKernel
             } else {
                 $routes->import($microServiceConfDir.'/{routes}.php');
             }
+        }
+
+        $routes->import($defaultConfDir.'/{routes}/'.$this->environment.'/*.yaml');
+        $routes->import($defaultConfDir.'/{routes}/*.yaml');
+
+        if (is_file($defaultConfDir.'/routes.yaml')) {
+            $routes->import($defaultConfDir.'/routes.yaml');
+        } else {
+            $routes->import($defaultConfDir.'/{routes}.php');
         }
     }
 

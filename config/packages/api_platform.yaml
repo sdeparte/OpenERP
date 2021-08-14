@@ -1,8 +1,5 @@
 api_platform:
     version: '%env(API_VERSION)%'
-    mapping:
-        paths:
-            - '%kernel.project_dir%/src/%micro_service.name%/Documents'
     patch_formats:
         json: ['application/merge-patch+json']
     swagger:

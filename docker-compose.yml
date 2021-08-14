@@ -12,6 +12,41 @@ services:
     ports:
       - 127.55.0.1:27017:27017
 
+  kong:
+    build: docker/kong
+    hostname: api.erp.docker
+    volumes:
+      - ./docker/kong/kong.yml:/home/kong/kong.yml
+    environment:
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:80
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:443
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://kong:8001"]
+      interval: 5s
+      timeout: 2s
+      retries: 15
+    ports:
+      - 127.55.0.2:8001:8001
+      - 127.55.0.2:80:80
+      - 127.55.0.2:443:443
+
+  global-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_common.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: global.erp.docker
+    ports:
+      - 127.55.0.10:80:80
+      - 127.55.0.10:443:443
+    environment:
+      MICRO_SERVICE_NAME: Global
+      API_VERSION: 0.0.0
+
   common-api:
     build: docker/php
     working_dir: /home/erp
@@ -20,12 +55,11 @@ services:
       - ./docker/php/vhost_common.conf:/etc/apache2/sites-available/000-default.conf
     hostname: common.erp.docker
     ports:
-      - 127.55.0.2:80:80
-      - 127.55.0.2:443:443
+      - 127.55.0.20:80:80
+      - 127.55.0.20:443:443
     environment:
       MICRO_SERVICE_NAME: Common
-      MICRO_SERVICE_HOST: common.erp.docker
-      API_VERSION: 0.1.0
+      API_VERSION: 0.0.0
 
   users-api:
     build: docker/php
@@ -35,12 +69,11 @@ services:
       - ./docker/php/vhost_users.conf:/etc/apache2/sites-available/000-default.conf
     hostname: users.erp.docker
     ports:
-      - 127.55.0.3:80:80
-      - 127.55.0.3:443:443
+      - 127.55.0.30:80:80
+      - 127.55.0.30:443:443
     environment:
       MICRO_SERVICE_NAME: Users
-      MICRO_SERVICE_HOST: users.erp.docker
-      API_VERSION: 0.2.0
+      API_VERSION: 0.0.0
 
   employes-api:
     build: docker/php
@@ -50,12 +83,11 @@ services:
       - ./docker/php/vhost_employes.conf:/etc/apache2/sites-available/000-default.conf
     hostname: employes.erp.docker
     ports:
-      - 127.55.0.4:80:80
-      - 127.55.0.4:443:443
+      - 127.55.0.40:80:80
+      - 127.55.0.40:443:443
     environment:
       MICRO_SERVICE_NAME: Employes
-      MICRO_SERVICE_HOST: employes.erp.docker
-      API_VERSION: 0.3.0
+      API_VERSION: 0.0.0
 
 volumes:
   database: ~
