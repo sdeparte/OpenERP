@@ -5,4 +5,9 @@ services:
 
     App\Users\DataPersister\UtilisateurDataPersister:
         arguments:
-            $docuementManager: '@doctrine_mongodb.odm.users_document_manager'
+            $documentManager: '@doctrine_mongodb.odm.users_document_manager'
+
+    App\Users\Decorator\JwtDecorator:
+        arguments:
+         - $decorates: '@api_platform.openapi.factory'
+        autoconfigure: false

@@ -14,7 +14,7 @@ class UtilisateurDataPersister implements ContextAwareDataPersisterInterface
     /**
      * @var DocumentManager
      */
-    private $docuementManager;
+    private $documentManager;
 
     /**
      * @var UserPasswordHasherInterface
@@ -22,10 +22,10 @@ class UtilisateurDataPersister implements ContextAwareDataPersisterInterface
     private $passwordHasher;
 
     public function __construct(
-        DocumentManager $docuementManager,
+        DocumentManager $documentManager,
         UserPasswordHasherInterface $passwordHasher
     ) {
-        $this->docuementManager = $docuementManager;
+        $this->documentManager = $documentManager;
         $this->passwordHasher = $passwordHasher;
     }
 
@@ -53,8 +53,8 @@ class UtilisateurDataPersister implements ContextAwareDataPersisterInterface
             $data->eraseCredentials();
         }
 
-        $this->docuementManager->persist($data);
-        $this->docuementManager->flush();
+        $this->documentManager->persist($data);
+        $this->documentManager->flush();
     }
 
     /**
@@ -62,7 +62,7 @@ class UtilisateurDataPersister implements ContextAwareDataPersisterInterface
      */
     public function remove($data, array $context = [])
     {
-        $this->docuementManager->remove($data);
-        $this->docuementManager->flush();
+        $this->documentManager->remove($data);
+        $this->documentManager->flush();
     }
 }

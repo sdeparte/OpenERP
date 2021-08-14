@@ -21,8 +21,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     collectionOperations={
  *          "get",
  *          "post"={
+ *              "security"="is_granted('ROLE_ADMIN')",
  *              "validation_groups"={"Default", "create"},
  *          },
+ *     },
+ *     itemOperations={
+ *          "get",
+ *          "put"={"security"="is_granted('ROLE_ADMIN') or object == user"},
  *     },
  * )
  *
