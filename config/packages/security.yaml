@@ -8,9 +8,11 @@ security:
                 class: App\Users\Documents\Utilisateur
                 property: username
                 manager_name: users
+
     password_hashers:
         App\Users\Documents\Utilisateur:
             algorithm: auto
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
