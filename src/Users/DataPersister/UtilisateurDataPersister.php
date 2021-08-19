@@ -21,10 +21,8 @@ class UtilisateurDataPersister implements ContextAwareDataPersisterInterface
      */
     private $passwordHasher;
 
-    public function __construct(
-        DocumentManager $documentManager,
-        UserPasswordHasherInterface $passwordHasher
-    ) {
+    public function __construct(DocumentManager $documentManager, UserPasswordHasherInterface $passwordHasher)
+    {
         $this->documentManager = $documentManager;
         $this->passwordHasher = $passwordHasher;
     }

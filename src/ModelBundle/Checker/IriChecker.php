@@ -25,6 +25,7 @@ class IriChecker
     public function getIriExistenceStatuses(string $microService, array $iris): array
     {
         $result = [];
+
         foreach ($iris as $iri) {
             $result[$iri] = $this->httpClient->request('GET', self::$microServicesMapper[$microService].$iri)->getStatusCode();
         }

@@ -176,7 +176,7 @@ class SwaggerUiAction
 
         foreach ($microServiceUrls as $microServiceUrl) {
             try {
-                $json = $this->httpClient->request('GET', $microServiceUrl.'docs.json')->getContent();
+                $json = $this->httpClient->request('GET', $microServiceUrl.'api/docs.json')->getContent();
             } catch (\Exception $e) {
                 continue;
             }

@@ -16,13 +16,13 @@ class Iri extends Constraint
      */
     public $microService;
 
-    /**
-     * Skip validation on 4xx errors.
-     */
-    public $skipOnError = false;
-
     public function getDefaultOption()
     {
         return 'microService';
+    }
+
+    public function getRequiredOptions()
+    {
+        return ['microService'];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Users\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
+use App\ModelBundle\Validator\Unique;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -32,11 +33,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * )
  *
  * @ODM\Document
+ * @Unique(self::class, fields="username")
+ *
  * @method string getUserIdentifier()
  */
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
     /**
      * @var int
      *
@@ -54,7 +56,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $pseudonyme;
+    private $pseudonym;
 
     /**
      * @var string
@@ -116,7 +118,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $employeIri;
+    private $employeIri = null;
 
     /**
      * @return int
@@ -127,13 +129,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param string $pseudonyme
+     * @param string $pseudonym
      *
      * @return Utilisateur
      */
-    public function setPseudonyme(string $pseudonyme): Utilisateur
+    public function setPseudonym(string $pseudonym): Utilisateur
     {
-        $this->pseudonyme = $pseudonyme;
+        $this->pseudonym = $pseudonym;
 
         return $this;
     }
@@ -141,9 +143,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return string
      */
-    public function getPseudonyme(): string
+    public function getPseudonym(): string
     {
-        return $this->pseudonyme;
+        return $this->pseudonym;
     }
 
     /**
@@ -310,7 +312,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getDisplayName(): string
     {
-        return $this->pseudonyme.' ('.$this->username.')';
+        return $this->pseudonym.' ('.$this->username.')';
     }
 
     /**

@@ -3,11 +3,19 @@ services:
         autowire: true
         autoconfigure: true
 
+    App\ModelBundle\Validator\UniqueValidator:
+        arguments:
+            $documentManager: '@doctrine_mongodb.odm.users_document_manager'
+
     App\Users\DataPersister\UtilisateurDataPersister:
         arguments:
             $documentManager: '@doctrine_mongodb.odm.users_document_manager'
 
-    App\Users\Decorator\JwtDecorator:
+    App\Users\Command\CreateUserCommand:
         arguments:
-         - $decorates: '@api_platform.openapi.factory'
+            $documentManager: '@doctrine_mongodb.odm.users_document_manager'
+
+    App\Users\Decorator\JwtDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\Users\Decorator\JwtDecorator.inner']
         autoconfigure: false

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\ModelBundle\Validator\UniqueValidator:
+        arguments:
+            $documentManager: '@doctrine_mongodb.odm.employes_document_manager'

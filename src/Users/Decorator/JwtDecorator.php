@@ -39,13 +39,11 @@ class JwtDecorator implements OpenApiFactoryInterface
         $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'email' => [
+                'username' => [
                     'type' => 'string',
-                    'example' => 'johndoe@example.com',
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => 'apassword',
                 ],
             ],
         ]);
@@ -64,6 +62,10 @@ class JwtDecorator implements OpenApiFactoryInterface
 
         $pathItem = new Model\PathItem(
             'JWT Token',
+            null,
+            null,
+            null,
+            null,
             new Model\Operation(
                 'postCredentialsItem',
                 ['Token'],
@@ -80,11 +82,14 @@ class JwtDecorator implements OpenApiFactoryInterface
                     ],
                 ],
                 'Get JWT token to login.',
+                '',
+                null,
+                [],
                 $requestBody
             )
         );
 
-        $openApi->getPaths()->addPath('/authentication_token', $pathItem);
+        $openApi->getPaths()->addPath('/api/login_check', $pathItem);
 
         return $openApi;
     }

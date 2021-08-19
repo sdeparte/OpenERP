@@ -3,7 +3,6 @@
 namespace App\ModelBundle\Validator;
 
 use App\ModelBundle\Checker\IriChecker;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -16,14 +15,8 @@ class IriValidator extends ConstraintValidator
      */
     private $iriExistenceChecker;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(IriChecker $iriExistenceChecker, LoggerInterface $logger) {
+    public function __construct(IriChecker $iriExistenceChecker) {
         $this->iriExistenceChecker = $iriExistenceChecker;
-        $this->logger = $logger;
     }
 
     /**
@@ -32,7 +25,7 @@ class IriValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint): void
     {
         if (empty($constraint->microService)) {
-            throw new \LogicException(sprintf("You must specify 'microService' attribute of '%s'", Iri::class));
+            throw new \LogicException(sprintf("You must specify 'microService' attribute of '%s'", Unique::class));
         }
 
         if (!$value) {
@@ -41,27 +34,21 @@ class IriValidator extends ConstraintValidator
 
         try {
             $checkedIris = $this->iriExistenceChecker->getIriExistenceStatuses($constraint->microService, is_array($value) ? $value : [$value]);
-        } catch (ClientExceptionInterface $e) {
-            if ($constraint->skipOnError) {
-                return;
-            }
-
-            throw new \RuntimeException(sprintf("Unable to validate IRIs of microservice '%s': %s", $constraint->microService, $e->getMessage()));
-        } catch (ExceptionInterface $e) {
-            $this->logger->notice(sprintf("Unable to validate IRIs of microservice '%s': %s", $constraint->microService, $e->getMessage()));
-
-            return;
+        } catch (ClientExceptionInterface|ExceptionInterface $e) {
         }
 
         $isArray = is_array($value);
-        $value = $isArray ? $value : [$value];
+        $values = $isArray ? $value : [$value];
 
-        foreach ($value as $k => $iri) {
+        foreach ($values as $key => $iri) {
             if (!($checkedIris[$iri] ?? false)) {
-                $violation = $this->context->buildViolation($constraint->message)->setParameter('{{ iri }}', $iri);
+                $violation = $this->context->buildViolation($constraint->message)
+                    ->setParameter('{{ iri }}', $iri);
+
                 if ($isArray) {
-                    $violation->atPath("[$k]"); // define the violation path if we got an array of iris
+                    $violation->atPath("[$key]");
                 }
+
                 $violation->addViolation();
             }
         }
