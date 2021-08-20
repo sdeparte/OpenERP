@@ -6,4 +6,7 @@ services:
   ApiPlatform\Core\Bridge\Symfony\Bundle\SwaggerUi\SwaggerUiContext: '@api_platform.swagger_ui.context'
 
   App\Documentation\Controller\SwaggerUiAction:
+    arguments:
+      $apiDocUsername: '%env(API_USERNAME)%'
+      $apiDocPassword: '%env(API_PASSWORD)%'
     tags: ['controller.service_arguments']

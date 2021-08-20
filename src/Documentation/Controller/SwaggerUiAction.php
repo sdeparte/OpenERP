@@ -6,9 +6,11 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\SwaggerUi\SwaggerUiContext;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\Options;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Twig\Environment as TwigEnvironment;
@@ -70,9 +72,11 @@ class SwaggerUiAction
      */
     private $oauthClientSecret;
 
-    public function __construct(HttpClientInterface $httpClient, ResourceMetadataFactoryInterface $resourceMetadataFactory, ?TwigEnvironment $twig, UrlGeneratorInterface $urlGenerator, NormalizerInterface $normalizer, OpenApiFactoryInterface $openApiFactory, Options $openApiOptions, SwaggerUiContext $swaggerUiContext, array $formats = [], string $oauthClientId = null, string $oauthClientSecret = null)
+    public function __construct(HttpClientInterface $httpClient, JWTTokenManagerInterface $JWTManager, ResourceMetadataFactoryInterface $resourceMetadataFactory, ?TwigEnvironment $twig, UrlGeneratorInterface $urlGenerator, NormalizerInterface $normalizer, OpenApiFactoryInterface $openApiFactory, Options $openApiOptions, SwaggerUiContext $swaggerUiContext, string $apiDocUsername, string $apiDocPassword, array $formats = [], string $oauthClientId = null, string $oauthClientSecret = null)
     {
-        $this->httpClient = $httpClient;
+        $this->httpClient = $httpClient->withOptions([
+            'headers' => ['Authorization' => 'Bearer '.$JWTManager->create(new InMemoryUser($apiDocUsername, $apiDocPassword, ['ROLE_API']))]
+        ]);
         $this->resourceMetadataFactory = $resourceMetadataFactory;
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;

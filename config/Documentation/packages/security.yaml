@@ -28,10 +28,8 @@ security:
         api-doc:
             lazy: true
             provider: in_memory
+            http_basic: ~
             pattern: ^/api/docs(.json)?$
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
         main:
             lazy: true
             stateless: true

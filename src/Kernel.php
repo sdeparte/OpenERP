@@ -4,6 +4,7 @@ namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
@@ -26,8 +27,20 @@ class Kernel extends BaseKernel
         $defaultConfDir = $this->getProjectDir().'/config';
         $microServiceConfDir = $defaultConfDir.'/'.$this->getMicroServiceName();
 
-        $container->import($defaultConfDir.'/{packages}/*.yaml');
-        $container->import($defaultConfDir.'/{packages}/'.$this->environment.'/*.yaml');
+        if (file_exists($microServiceConfDir.'/packages/security.yaml')) {
+            foreach (glob($defaultConfDir.'/packages/*.yaml') as $file) {
+                if ('security.yaml' !== basename($file)) {
+                    $container->import($file);
+                } else {
+                    //$container->import($microServiceConfDir.'/packages/security.yaml');
+                }
+            }
+
+            $container->import($defaultConfDir.'/{packages}/'.$this->environment.'/*.yaml');
+        } else {
+            $container->import($defaultConfDir.'/{packages}/*.yaml');
+            $container->import($defaultConfDir.'/{packages}/'.$this->environment.'/*.yaml');
+        }
 
         if (file_exists($microServiceConfDir)) {
             $container->import($microServiceConfDir.'/{packages}/*.yaml');
