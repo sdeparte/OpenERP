@@ -28,8 +28,12 @@ security:
         api-doc:
             lazy: true
             provider: in_memory
-            http_basic: ~
             pattern: ^/api/docs(.json)?$
+            http_basic: ~
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+            entry_point: http_basic
         main:
             lazy: true
             stateless: true
@@ -45,6 +49,6 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-        - { path: ^/api/docs, roles: ROLE_API } # Allows accessing the Swagger UI
+        - { path: ^/api/docs, roles: ROLE_API }
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

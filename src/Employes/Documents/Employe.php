@@ -3,7 +3,6 @@
 namespace App\Employes\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -115,7 +114,7 @@ class Employe
      *
      * @return Employe
      */
-    public function setNom($nom): Employe
+    public function setNom(string $nom): Employe
     {
         $this->nom = strtoupper($nom);
 
@@ -135,7 +134,7 @@ class Employe
      *
      * @return Employe
      */
-    public function setPrenom($prenom): Employe
+    public function setPrenom(string $prenom): Employe
     {
         $this->prenom = ucfirst($prenom);
 
@@ -155,7 +154,7 @@ class Employe
      *
      * @return Employe
      */
-    public function setInitiales($initiales): Employe
+    public function setInitiales(string $initiales): Employe
     {
         $this->initiales = strtoupper($initiales);
 
@@ -181,7 +180,7 @@ class Employe
     /**
      * @param string $sexe
      *
-     * @return $this
+     * @return Employe
      */
     public function setSexe(string $sexe): Employe
     {
@@ -201,7 +200,7 @@ class Employe
     /**
      * @param int $matricule
      *
-     * @return $this
+     * @return Employe
      */
     public function setMatricule(int $matricule): Employe
     {
@@ -221,7 +220,7 @@ class Employe
     /**
      * @param \DateTime $dateDebMutu
      *
-     * @return $this
+     * @return Employe
      */
     public function setDateDebMutu(\DateTime $dateDebMutu): Employe
     {
@@ -239,11 +238,11 @@ class Employe
     }
 
     /**
-     * @param $nbCPayes
+     * @param float $nbCPayes
      *
-     * @return $this
+     * @return Employe
      */
-    public function setNbCPayes($nbCPayes): Employe
+    public function setNbCPayes(float $nbCPayes): Employe
     {
         $this->nbCPayes = $nbCPayes;
 
@@ -259,11 +258,11 @@ class Employe
     }
 
     /**
-     * @param $nbRTT
+     * @param float $nbRTT
      *
-     * @return $this
+     * @return Employe
      */
-    public function setNbRTT($nbRTT): Employe
+    public function setNbRTT(float $nbRTT): Employe
     {
         $this->nbRTT = $nbRTT;
 
@@ -279,11 +278,11 @@ class Employe
     }
 
     /**
-     * @param $nbRecup
+     * @param float $nbRecup
      *
-     * @return $this
+     * @return Employe
      */
-    public function setNbRecup($nbRecup): Employe
+    public function setNbRecup(float $nbRecup): Employe
     {
         $this->nbRecup = $nbRecup;
 
@@ -301,7 +300,7 @@ class Employe
     /**
      * @param bool $isDRH
      *
-     * @return $this
+     * @return Employe
      */
     public function setIsDRH(bool $isDRH): Employe
     {

@@ -26,10 +26,10 @@ services:
         resource: '../src/Users'
         exclude: '../src/Users/{Entity,DependencyInjection,Tests,Kernel.php}/'
 
-    App\AchatArticles\:
-        resource: '../src/AchatArticles'
-        exclude: '../src/AchatArticles/{Entity,DependencyInjection,Tests,Kernel.php}/'
+    App\Clients\:
+        resource: '../src/Clients'
+        exclude: '../src/Clients/{Entity,DependencyInjection,Tests,Kernel.php}/'
 
-    App\VenteArticles\:
-        resource: '../src/AchatArticles'
-        exclude: '../src/AchatArticles/{Entity,DependencyInjection,Tests,Kernel.php}/'
+    App\Fournisseurs\:
+        resource: '../src/Fournisseurs'
+        exclude: '../src/Fournisseurs/{Entity,DependencyInjection,Tests,Kernel.php}/'

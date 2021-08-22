@@ -46,6 +46,7 @@ class CreateUserCommand extends Command
             ->addArgument('pseudonym',  InputArgument::REQUIRED, 'User pseudonym')
             ->addArgument('username',  InputArgument::REQUIRED, 'User login')
             ->addArgument('password',  InputArgument::REQUIRED, 'User password')
+            ->addArgument('roles',  InputArgument::REQUIRED, 'User roles (Json format)')
             ->addArgument('employeIri',  InputArgument::OPTIONAL, 'User linked employe');
     }
 
@@ -55,6 +56,7 @@ class CreateUserCommand extends Command
             ->setPseudonym($input->getArgument('pseudonym'))
             ->setUsername($input->getArgument('username'))
             ->setPlainPassword($input->getArgument('password'))
+            ->setRoles(json_decode($input->getArgument('roles')))
             ->setEmployeIri($input->getArgument('employeIri'));
 
         $utilisateur->setPassword(
@@ -85,6 +87,7 @@ class CreateUserCommand extends Command
         $output->writeln('Pseudonym: '.$utilisateur->getPseudonym());
         $output->writeln('Username: '.$utilisateur->getUsername());
         $output->writeln('Password: '.str_repeat('*', strlen($utilisateur->getPassword())));
+        $output->writeln('Roles: '.json_encode($utilisateur->getRoles()));
         $output->writeln('EmployeIri: '.$utilisateur->getEmployeIri());
 
         return Command::SUCCESS;

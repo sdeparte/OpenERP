@@ -2,10 +2,11 @@
 
 namespace App\Users\Documents;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\SearchFilter;
 use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "put"={"security"="is_granted('ROLE_ADMIN') or object == user"},
  *     },
  * )
+ *
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "username": "exact"})
  *
  * @ODM\Document
  * @Unique(self::class, fields="username")
@@ -91,6 +94,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ODM\Field
      */
     private $salt = null;
+
+    /**
+     * @var array
+     *
+     * @ODM\Field(type="collection")
+     *
+     * @Groups({"user:read", "user:write"})
+     */
+    private $roles = null;
 
     /**
      * @var bool
@@ -222,7 +234,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param string|null $salt
      *
-     * @return $this
+     * @return Utilisateur
      */
     public function setSalt(?string $salt): Utilisateur
     {
@@ -237,6 +249,26 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getSalt(): ?string
     {
         return $this->salt;
+    }
+
+    /**
+     * @param array $roles
+     *
+     * @return Utilisateur
+     */
+    public function setRoles(array $roles): Utilisateur
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
     }
 
     /**
@@ -290,21 +322,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param string|null $employeIri
      *
-     * @return $this
+     * @return Utilisateur
      */
     public function setEmployeIri(?string $employeIri): Utilisateur
     {
         $this->employeIri = $employeIri;
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRoles(): array
-    {
-        return array('ROLE_USER');
     }
 
     /**

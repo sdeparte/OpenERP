@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Common\Documents;
+namespace App\Fournisseurs\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\ModelBundle\Validator\Iri;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Devise
+ * SousEnsemble
  *
  * @ApiResource
  *
  * @ODM\Document
  */
-class Devise
+class SousEnsemble
 {
     /**
      * @var int
@@ -26,30 +27,28 @@ class Devise
      * @var string
      *
      * @ODM\Field
+     * @Iri("Fournisseurs")
+     * @Assert\NotBlank
+     */
+    private $typeIri;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field
+     * @Assert\NotBlank
+     */
+    private $numero;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field
      * @Assert\NotBlank
      */
     private $nom;
 
     /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Assert\NotBlank
-     */
-    private $abreviation;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Assert\NotBlank
-     */
-    private $symbole;
-
-
-    /**
-     * Get id
-     *
      * @return int
      */
     public function getId(): int
@@ -58,13 +57,51 @@ class Devise
     }
 
     /**
-     * Set nom
+     * @param string $typeIri
      *
+     * @return SousEnsemble
+     */
+    public function setTypeIri(string $typeIri): SousEnsemble
+    {
+        $this->typeIri = strtoupper($typeIri);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeIri(): string
+    {
+        return $this->typeIri;
+    }
+
+    /**
+     * @param string $numero
+     *
+     * @return SousEnsemble
+     */
+    public function setNumero(string $numero): SousEnsemble
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumero(): string
+    {
+        return $this->numero;
+    }
+
+    /**
      * @param string $nom
      *
-     * @return Devise
+     * @return SousEnsemble
      */
-    public function setNom(string $nom): Devise
+    public function setNom($nom): SousEnsemble
     {
         $this->nom = ucfirst($nom);
 
@@ -77,55 +114,5 @@ class Devise
     public function getNom(): string
     {
         return $this->nom;
-    }
-
-    /**
-     * @param string $abreviation
-     *
-     * @return Devise
-     */
-    public function setAbreviation(string $abreviation): Devise
-    {
-        $this->abreviation = strtoupper($abreviation);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAbreviation(): string
-    {
-        return $this->abreviation;
-    }
-
-    /**
-     * @param string $symbole
-     *
-     * @return Devise
-     */
-    public function setSymbole(string $symbole): Devise
-    {
-        $this->symbole = $symbole;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSymbole(): string
-    {
-        return $this->symbole;
-    }
-
-    /**
-     * Get display name
-     *
-     * @return string
-     */
-    public function getDisplayName(): string
-    {
-        return $this->symbole.' - '.$this->nom;
     }
 }

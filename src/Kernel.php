@@ -27,12 +27,10 @@ class Kernel extends BaseKernel
         $defaultConfDir = $this->getProjectDir().'/config';
         $microServiceConfDir = $defaultConfDir.'/'.$this->getMicroServiceName();
 
-        if (file_exists($microServiceConfDir.'/packages/security.yaml')) {
+        if (!empty($microServiceConfDir) && file_exists($microServiceConfDir.'/packages/security.yaml')) {
             foreach (glob($defaultConfDir.'/packages/*.yaml') as $file) {
                 if ('security.yaml' !== basename($file)) {
                     $container->import($file);
-                } else {
-                    //$container->import($microServiceConfDir.'/packages/security.yaml');
                 }
             }
 
@@ -42,7 +40,7 @@ class Kernel extends BaseKernel
             $container->import($defaultConfDir.'/{packages}/'.$this->environment.'/*.yaml');
         }
 
-        if (file_exists($microServiceConfDir)) {
+        if (!empty($microServiceConfDir) && file_exists($microServiceConfDir)) {
             $container->import($microServiceConfDir.'/{packages}/*.yaml');
             $container->import($microServiceConfDir.'/{packages}/'.$this->environment.'/*.yaml');
         }
@@ -56,7 +54,7 @@ class Kernel extends BaseKernel
 
         $container->import($defaultConfDir.'/parameters.php');
 
-        if (file_exists($microServiceConfDir)) {
+        if (!empty($microServiceConfDir) && file_exists($microServiceConfDir)) {
             if (is_file($microServiceConfDir.'/services.yaml')) {
                 $container->import($microServiceConfDir.'/services.yaml');
                 $container->import($microServiceConfDir.'/{services}_'.$this->environment.'.yaml');
@@ -71,7 +69,7 @@ class Kernel extends BaseKernel
         $defaultConfDir = $this->getProjectDir().'/config';
         $microServiceConfDir = $defaultConfDir.'/'.$this->getMicroServiceName();
 
-        if (file_exists($microServiceConfDir)) {
+        if (!empty($microServiceConfDir) && file_exists($microServiceConfDir)) {
             $routes->import($microServiceConfDir.'/{routes}/'.$this->environment.'/*.yaml');
             $routes->import($microServiceConfDir.'/{routes}/*.yaml');
 

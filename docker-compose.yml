@@ -44,7 +44,7 @@ services:
       - 127.55.0.10:80:80
       - 127.55.0.10:443:443
     environment:
-      MICRO_SERVICE_URLS: 'http://common.erp.docker/;http://users.erp.docker/;http://employes.erp.docker/'
+      MICRO_SERVICE_URLS: 'http://common.erp.docker/;http://users.erp.docker/;http://employes.erp.docker/;http://fournisseurs.erp.docker/'
       API_GATEWAY_URLS: 'http://127.55.0.2/;http://api.erp.docker/'
       MICRO_SERVICE_NAME: Documentation
       API_VERSION: 0.0.0
@@ -89,6 +89,20 @@ services:
       - 127.55.0.40:443:443
     environment:
       MICRO_SERVICE_NAME: Employes
+      API_VERSION: 0.0.0
+
+  fournisseurs-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_fournisseurs.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: fournisseurs.erp.docker
+    ports:
+      - 127.55.0.50:80:80
+      - 127.55.0.50:443:443
+    environment:
+      MICRO_SERVICE_NAME: Fournisseurs
       API_VERSION: 0.0.0
 
 volumes:

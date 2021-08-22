@@ -1,6 +1,7 @@
 doctrine_mongodb:
   default_connection: default
   default_document_manager: default
+
   connections:
     default:
       server: "%env(MONGODB_URL)%"
@@ -8,6 +9,11 @@ doctrine_mongodb:
       server: "%env(MONGODB_URL)%"
     employes:
       server: "%env(MONGODB_URL)%"
+    clients:
+      server: "%env(MONGODB_URL)%"
+    fournisseurs:
+      server: "%env(MONGODB_URL)%"
+
   document_managers:
     default:
       connection: default
@@ -37,4 +43,24 @@ doctrine_mongodb:
           type: annotation
           dir: '%kernel.project_dir%/src/Employes'
           prefix: App\Employes\Documents
+          is_bundle: false
+
+    clients:
+      connection: clients
+      database: clients
+      mappings:
+        Users:
+          type: annotation
+          dir: '%kernel.project_dir%/src/Clients'
+          prefix: App\Clients\Documents
+          is_bundle: false
+
+    fournisseurs:
+      connection: fournisseurs
+      database: fournisseurs
+      mappings:
+        Users:
+          type: annotation
+          dir: '%kernel.project_dir%/src/Fournisseurs'
+          prefix: App\Fournisseurs\Documents
           is_bundle: false

@@ -3,21 +3,16 @@ security:
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
+        api_users:
+            id: App\ModelBundle\Authentication\UserProvider\ApiUserProvider
         in_memory:
             memory:
                 users:
                     '%env(API_USERNAME)%':
                         password: '%env(API_PASSWORD)%'
                         roles: ['ROLE_API']
-        mongo_provider:
-            mongodb:
-                class: App\Users\Documents\Utilisateur
-                property: username
-                manager_name: users
 
     password_hashers:
-        App\Users\Documents\Utilisateur:
-            algorithm: auto
         Symfony\Component\Security\Core\User\InMemoryUser:
             algorithm: auto
 
@@ -29,24 +24,19 @@ security:
             lazy: true
             provider: in_memory
             pattern: ^/api/docs(.json)?$
+            http_basic: ~
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+            entry_point: http_basic
         main:
             lazy: true
             stateless: true
-            provider: mongo_provider
-            json_login:
-                check_path: /api/login_check
-                username_path: username
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            provider: api_users
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-        - { path: ^/api/docs, roles: ROLE_API } # Allows accessing the Swagger UI
-        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/docs, roles: ROLE_API }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

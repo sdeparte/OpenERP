@@ -3,11 +3,15 @@
 namespace App\ModelBundle\Authentication\UserProvider;
 
 use App\ModelBundle\Authentication\Model\ApiUser;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -16,38 +20,69 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class ApiUserProvider implements UserProviderInterface
 {
     /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
      * @var HttpClientInterface
      */
     protected $httpClient;
 
-    public function __construct(SessionInterface $session, HttpClientInterface $msHttpClient)
+    /**
+     * @var TokenExtractorInterface
+     */
+    protected $tokenExtractor;
+
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+
+    public function __construct(HttpClientInterface $httpClient, TokenExtractorInterface $tokenExtractor, RequestStack $requestStack)
     {
-        $this->session = $session;
-        $this->httpClient = $msHttpClient;
+        $this->httpClient = $httpClient;
+        $this->tokenExtractor = $tokenExtractor;
+        $this->requestStack = $requestStack;
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
-        // TODO: Implement refreshUser() method.
+        return $user;
     }
 
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
-        // TODO: Implement supportsClass() method.
+        return ApiUser::class === $class;
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): ApiUser
     {
-        // TODO: Implement loadUserByUsername() method.
+        return $this->getMicroServiceUser($username);
     }
 
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): ApiUser
     {
-        // TODO: Implement @method UserInterface loadUserByIdentifier(string $identifier)
+        return $this->getMicroServiceUser($name);
+    }
+
+    private function getMicroServiceUser($identity): ApiUser
+    {
+        $token = $this->tokenExtractor->extract($this->requestStack->getCurrentRequest());
+
+        /** @var HttpClientInterface $httpClient */
+        $httpClient = $this->httpClient->withOptions([
+            'headers' => ['Authorization' => 'Bearer '.$token]
+        ]);
+
+        try {
+            $response = $httpClient->request('GET', 'http://api.erp.docker/api/utilisateurs?username='.$identity);
+
+            if ($response->getStatusCode() &&
+                isset(json_decode($response->getContent(), true)['hydra:member'][0])
+            ) {
+                $userAsArray = json_decode($response->getContent(), true)['hydra:member'][0];
+
+                return new ApiUser($userAsArray['username'], null, $userAsArray['roles']);
+            }
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+        }
+
+        throw new UserNotFoundException("User not found in 'Users' micro-service.");
     }
 }

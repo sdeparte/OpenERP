@@ -35,3 +35,12 @@ services:
         strip_path: false
         paths:
           - /api/employes
+
+  - name: fournisseurs
+    url: http://fournisseurs.erp.docker
+    routes:
+      - name: fournisseurs
+        strip_path: false
+        paths:
+          - /api/type_sous_ensemble
+          - /api/sous_ensemble

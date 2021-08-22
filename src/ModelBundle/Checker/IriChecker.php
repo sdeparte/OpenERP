@@ -7,11 +7,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class IriChecker
 {
-    public static $microServicesMapper = [
-        'Common' => 'http://common.erp.docker ',
-        'Users' => 'http://users.erp.docker',
-        'Employes' => 'http://employes.erp.docker',
-    ];
     /**
      * @var HttpClientInterface
      */
@@ -27,7 +22,7 @@ class IriChecker
         $result = [];
 
         foreach ($iris as $iri) {
-            $result[$iri] = $this->httpClient->request('GET', self::$microServicesMapper[$microService].$iri)->getStatusCode();
+            $result[$iri] = $this->httpClient->request('GET', 'http://api.erp.docker'.$iri)->getStatusCode();
         }
 
         return $result;
