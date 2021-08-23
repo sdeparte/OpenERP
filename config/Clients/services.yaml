@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Clients\:
+        resource: '../../src/Clients'
+        exclude: '../../src/Clients/{Entity,DependencyInjection,Tests,Kernel.php}/'

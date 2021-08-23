@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -20,25 +21,31 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class ApiUserProvider implements UserProviderInterface
 {
     /**
-     * @var HttpClientInterface
-     */
-    protected $httpClient;
-
-    /**
      * @var TokenExtractorInterface
      */
-    protected $tokenExtractor;
+    private $tokenExtractor;
 
     /**
      * @var RequestStack
      */
-    protected $requestStack;
+    private $requestStack;
 
-    public function __construct(HttpClientInterface $httpClient, TokenExtractorInterface $tokenExtractor, RequestStack $requestStack)
+    /**
+     * @var HttpClientInterface
+     */
+    private $httpClient;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(TokenExtractorInterface $tokenExtractor, RequestStack $requestStack, HttpClientInterface $httpClient, SerializerInterface $serializer)
     {
-        $this->httpClient = $httpClient;
         $this->tokenExtractor = $tokenExtractor;
         $this->requestStack = $requestStack;
+        $this->httpClient = $httpClient;
+        $this->serializer = $serializer;
     }
 
     public function refreshUser(UserInterface $user): UserInterface
@@ -67,18 +74,17 @@ class ApiUserProvider implements UserProviderInterface
 
         /** @var HttpClientInterface $httpClient */
         $httpClient = $this->httpClient->withOptions([
-            'headers' => ['Authorization' => 'Bearer '.$token]
+            'headers' => [
+                'accept' => 'application/ld+json',
+                'Authorization' => 'Bearer '.$token
+            ]
         ]);
 
         try {
-            $response = $httpClient->request('GET', 'http://api.erp.docker/api/utilisateurs?username='.$identity);
+            $response = $httpClient->request('GET', 'http://api.erp.docker/api/utilisateurs/by_username/'.$identity);
 
-            if ($response->getStatusCode() &&
-                isset(json_decode($response->getContent(), true)['hydra:member'][0])
-            ) {
-                $userAsArray = json_decode($response->getContent(), true)['hydra:member'][0];
-
-                return new ApiUser($userAsArray['username'], null, $userAsArray['roles']);
+            if ($response->getStatusCode()) {
+                return $this->serializer->deserialize($response->getContent(), ApiUser::class, 'json');
             }
         } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
         }

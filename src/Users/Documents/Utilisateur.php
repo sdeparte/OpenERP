@@ -3,10 +3,12 @@
 namespace App\Users\Documents;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\SearchFilter;
 use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
+use App\Users\Controller\GetUserByUsername;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,6 +31,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     },
  *     itemOperations={
  *          "get",
+ *          "getByUsername"={
+ *              "route_name"="api_test",
+ *          },
  *          "put"={"security"="is_granted('ROLE_ADMIN') or object == user"},
  *     },
  * )
@@ -43,9 +48,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
-     * @var int
+     * @var string
      *
-     * @ODM\Id(strategy="INCREMENT", type="int")
+     * @ODM\Id(strategy="INCREMENT", type="string")
      *
      * @Groups("user:read")
      */
@@ -68,6 +73,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank
      *
      * @Groups({"user:read", "user:write"})
+     * @ApiProperty(identifier=true)
      */
     private $username;
 

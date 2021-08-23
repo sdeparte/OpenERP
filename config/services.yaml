@@ -13,23 +13,3 @@ services:
     App\ModelBundle\:
         resource: '../src/ModelBundle'
         exclude: '../src/ModelBundle/{Entity,DependencyInjection,Tests,Kernel.php}/'
-
-    App\Documentation\:
-        resource: '../src/Documentation'
-        exclude: '../src/Documentation/{Entity,DependencyInjection,Tests,Kernel.php}/'
-
-    App\Common\:
-        resource: '../src/Common'
-        exclude: '../src/Common/{Entity,DependencyInjection,Tests,Kernel.php}/'
-
-    App\Users\:
-        resource: '../src/Users'
-        exclude: '../src/Users/{Entity,DependencyInjection,Tests,Kernel.php}/'
-
-    App\Clients\:
-        resource: '../src/Clients'
-        exclude: '../src/Clients/{Entity,DependencyInjection,Tests,Kernel.php}/'
-
-    App\Fournisseurs\:
-        resource: '../src/Fournisseurs'
-        exclude: '../src/Fournisseurs/{Entity,DependencyInjection,Tests,Kernel.php}/'

@@ -1,0 +1,18 @@
+doctrine_mongodb:
+  default_connection: default
+  default_document_manager: default
+
+  connections:
+    default:
+      server: "%env(MONGODB_URL)%"
+
+  document_managers:
+    default:
+      connection: default
+      database: clients
+      mappings:
+        Clients:
+          type: annotation
+          dir: '%kernel.project_dir%/src/Clients'
+          prefix: App\Clients\Documents
+          is_bundle: false

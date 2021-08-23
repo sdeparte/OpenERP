@@ -13,7 +13,7 @@ security:
             mongodb:
                 class: App\Users\Documents\Utilisateur
                 property: username
-                manager_name: users
+                manager_name: default
 
     password_hashers:
         App\Users\Documents\Utilisateur:

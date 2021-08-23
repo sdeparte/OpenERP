@@ -3,17 +3,13 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\ModelBundle\Validator\UniqueValidator:
-        arguments:
-            $documentManager: '@doctrine_mongodb.odm.users_document_manager'
+    App\Users\:
+        resource: '../../src/Users'
+        exclude: '../../src/Users/{Entity,DependencyInjection,Tests,Kernel.php}/'
 
-    App\Users\DataPersister\UtilisateurDataPersister:
-        arguments:
-            $documentManager: '@doctrine_mongodb.odm.users_document_manager'
-
-    App\Users\Command\CreateUserCommand:
-        arguments:
-            $documentManager: '@doctrine_mongodb.odm.users_document_manager'
+    App\Users\Controller\:
+        resource: '../../src/Users/Controller/'
+        tags: [ 'controller.service_arguments' ]
 
     App\Users\Decorator\JwtDecorator:
         decorates: 'api_platform.openapi.factory'

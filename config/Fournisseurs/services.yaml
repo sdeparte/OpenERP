@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Fournisseurs\:
+        resource: '../../src/Fournisseurs'
+        exclude: '../../src/Fournisseurs/{Entity,DependencyInjection,Tests,Kernel.php}/'
