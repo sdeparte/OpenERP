@@ -6,7 +6,3 @@ services:
     App\Employes\:
         resource: '../../src/Employes'
         exclude: '../../src/Employes/{Entity,DependencyInjection,Tests,Kernel.php}/'
-
-    App\ModelBundle\Validator\UniqueValidator:
-        arguments:
-            $documentManager: '@doctrine_mongodb.odm.employes_document_manager'

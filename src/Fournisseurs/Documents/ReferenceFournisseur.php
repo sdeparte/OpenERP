@@ -4,19 +4,17 @@ namespace App\Fournisseurs\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
-use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * SousEnsemble
+ * ReferenceFournisseur
  *
  * @ApiResource
  *
  * @ODM\Document
- * @Unique(self::class, fields={"type", "numero"}, message="Un sous ensemble existe déjà avec ces type / numéro.")
  */
-class SousEnsemble
+class ReferenceFournisseur
 {
     /**
      * @var int
@@ -30,9 +28,16 @@ class SousEnsemble
      *
      * @ODM\Field
      * @Iri("Fournisseurs")
-     * @Assert\NotBlank
      */
-    private $typeIri;
+    private $fournisseurIri;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field
+     * @Iri("Fournisseurs")
+     */
+    private $articleIri;
 
     /**
      * @var string
@@ -40,15 +45,7 @@ class SousEnsemble
      * @ODM\Field
      * @Assert\NotBlank
      */
-    private $numero;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Assert\NotBlank
-     */
-    private $nom;
+    private $reference;
 
     /**
      * @return int
@@ -59,13 +56,21 @@ class SousEnsemble
     }
 
     /**
-     * @param string $typeIri
-     *
-     * @return SousEnsemble
+     * @return string
      */
-    public function setTypeIri(string $typeIri): SousEnsemble
+    public function getFournisseurIri(): string
     {
-        $this->typeIri = strtoupper($typeIri);
+        return $this->fournisseurIri;
+    }
+
+    /**
+     * @param string $fournisseurIri
+     *
+     * @return ReferenceFournisseur
+     */
+    public function setFournisseurIri(string $fournisseurIri): ReferenceFournisseur
+    {
+        $this->fournisseurIri = $fournisseurIri;
 
         return $this;
     }
@@ -73,19 +78,19 @@ class SousEnsemble
     /**
      * @return string
      */
-    public function getTypeIri(): string
+    public function getArticleIri(): string
     {
-        return $this->typeIri;
+        return $this->articleIri;
     }
 
     /**
-     * @param string $numero
+     * @param string $articleIri
      *
-     * @return SousEnsemble
+     * @return ReferenceFournisseur
      */
-    public function setNumero(string $numero): SousEnsemble
+    public function setArticleIri(string $articleIri): ReferenceFournisseur
     {
-        $this->numero = $numero;
+        $this->articleIri = $articleIri;
 
         return $this;
     }
@@ -93,28 +98,20 @@ class SousEnsemble
     /**
      * @return string
      */
-    public function getNumero(): string
+    public function getReference(): string
     {
-        return $this->numero;
+        return $this->reference;
     }
 
     /**
-     * @param string $nom
+     * @param string $reference
      *
-     * @return SousEnsemble
+     * @return ReferenceFournisseur
      */
-    public function setNom($nom): SousEnsemble
+    public function setReference(string $reference): ReferenceFournisseur
     {
-        $this->nom = ucfirst($nom);
+        $this->reference = $reference;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNom(): string
-    {
-        return $this->nom;
     }
 }

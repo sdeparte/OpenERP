@@ -3,6 +3,7 @@
 namespace App\Fournisseurs\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  *
  * @ODM\Document
+ * @Unique(self::class, fields="lettre", message="Un type de sous ensemble existe déjà avec cette lettre.")
  */
 class TypeSousEnsemble
 {
