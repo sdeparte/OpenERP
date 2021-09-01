@@ -39,4 +39,4 @@ security:
 
     access_control:
         - { path: ^/api/docs, roles: ROLE_API }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: PUBLIC_ACCESS }

@@ -1,17 +1,6 @@
 version: '3.5'
 
 services:
-  mongodb:
-    build: docker/mongodb
-    hostname: db.erp.docker
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=api-platform
-      - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
-    volumes:
-      - database:/var/lib/mongodb/data:rw
-    ports:
-      - 127.55.0.1:27017:27017
-
   kong:
     build: docker/kong
     hostname: api.erp.docker
@@ -29,9 +18,20 @@ services:
       timeout: 2s
       retries: 15
     ports:
-      - 127.55.0.2:8001:8001
-      - 127.55.0.2:80:80
-      - 127.55.0.2:443:443
+      - 127.55.0.1:8001:8001
+      - 127.55.0.1:80:80
+      - 127.55.0.1:443:443
+
+  mongodb:
+    build: docker/mongodb
+    hostname: db.erp.docker
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=api-platform
+      - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
+    volumes:
+      - database:/var/lib/mongodb/data:rw
+    ports:
+      - 127.55.0.2:27017:27017
 
   documentation-api:
     build: docker/php
@@ -44,23 +44,9 @@ services:
       - 127.55.0.10:80:80
       - 127.55.0.10:443:443
     environment:
-      MICRO_SERVICE_URLS: 'http://common.erp.docker/;http://users.erp.docker/;http://employes.erp.docker/;http://fournisseurs.erp.docker/'
-      API_GATEWAY_URLS: 'http://127.55.0.2/;http://api.erp.docker/'
+      MICRO_SERVICE_URLS: 'http://users.erp.docker/;http://common.erp.docker/;http://employes.erp.docker/;http://fournisseurs.erp.docker/'
+      API_GATEWAY_URLS: 'http://127.55.0.1/;http://api.erp.docker/'
       MICRO_SERVICE_NAME: Documentation
-      API_VERSION: 0.0.0
-
-  common-api:
-    build: docker/php
-    working_dir: /home/erp
-    volumes:
-      - .:/home/erp
-      - ./docker/php/vhost_common.conf:/etc/apache2/sites-available/000-default.conf
-    hostname: common.erp.docker
-    ports:
-      - 127.55.0.20:80:80
-      - 127.55.0.20:443:443
-    environment:
-      MICRO_SERVICE_NAME: Common
       API_VERSION: 0.0.0
 
   users-api:
@@ -71,10 +57,24 @@ services:
       - ./docker/php/vhost_users.conf:/etc/apache2/sites-available/000-default.conf
     hostname: users.erp.docker
     ports:
+      - 127.55.0.20:80:80
+      - 127.55.0.20:443:443
+    environment:
+      MICRO_SERVICE_NAME: Users
+      API_VERSION: 0.0.0
+
+  common-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_common.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: common.erp.docker
+    ports:
       - 127.55.0.30:80:80
       - 127.55.0.30:443:443
     environment:
-      MICRO_SERVICE_NAME: Users
+      MICRO_SERVICE_NAME: Common
       API_VERSION: 0.0.0
 
   employes-api:

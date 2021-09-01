@@ -65,7 +65,7 @@ class SousEnsemble
      */
     public function setTypeIri(string $typeIri): SousEnsemble
     {
-        $this->typeIri = strtoupper($typeIri);
+        $this->typeIri = $typeIri;
 
         return $this;
     }

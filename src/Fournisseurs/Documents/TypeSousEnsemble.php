@@ -78,7 +78,7 @@ class TypeSousEnsemble
      */
     public function getLettre(): string
     {
-        return $this->type;
+        return $this->lettre;
     }
 
     /**

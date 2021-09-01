@@ -157,7 +157,7 @@ class SwaggerUiAction
             }
         }
 
-        throw new RuntimeException(sprintf('The operation "%s" cannot be found in the Swagger specification.', $swaggerData['operationId']));
+        throw new \RuntimeException(sprintf('The operation "%s" cannot be found in the Swagger specification.', $swaggerData['operationId']));
     }
 
     /**

@@ -21,16 +21,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class ApiUserProvider implements UserProviderInterface
 {
     /**
-     * @var TokenExtractorInterface
-     */
-    private $tokenExtractor;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var HttpClientInterface
      */
     private $httpClient;
@@ -42,9 +32,15 @@ class ApiUserProvider implements UserProviderInterface
 
     public function __construct(TokenExtractorInterface $tokenExtractor, RequestStack $requestStack, HttpClientInterface $httpClient, SerializerInterface $serializer)
     {
-        $this->tokenExtractor = $tokenExtractor;
-        $this->requestStack = $requestStack;
-        $this->httpClient = $httpClient;
+        $token = $tokenExtractor->extract($requestStack->getCurrentRequest());
+
+        $this->httpClient = $httpClient->withOptions([
+            'headers' => [
+                'accept' => 'application/ld+json',
+                'Authorization' => 'Bearer '.$token,
+            ]
+        ]);
+
         $this->serializer = $serializer;
     }
 
@@ -70,18 +66,8 @@ class ApiUserProvider implements UserProviderInterface
 
     private function getMicroServiceUser($identity): ApiUser
     {
-        $token = $this->tokenExtractor->extract($this->requestStack->getCurrentRequest());
-
-        /** @var HttpClientInterface $httpClient */
-        $httpClient = $this->httpClient->withOptions([
-            'headers' => [
-                'accept' => 'application/ld+json',
-                'Authorization' => 'Bearer '.$token
-            ]
-        ]);
-
         try {
-            $response = $httpClient->request('GET', 'http://api.erp.docker/api/utilisateurs/by_username/'.$identity);
+            $response = $this->httpClient->request('GET', 'http://api.erp.docker/api/utilisateurs/by_username/'.$identity);
 
             if ($response->getStatusCode()) {
                 return $this->serializer->deserialize($response->getContent(), ApiUser::class, 'json');

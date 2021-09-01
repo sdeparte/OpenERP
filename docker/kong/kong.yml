@@ -17,7 +17,11 @@ services:
       - name: common
         strip_path: false
         paths:
+          - /api/adresses
+          - /api/contacts
+          - /api/domaines
           - /api/devises
+          - /api/pays
 
   - name: users
     url: http://users.erp.docker
@@ -42,5 +46,13 @@ services:
       - name: fournisseurs
         strip_path: false
         paths:
-          - /api/type_sous_ensemble
-          - /api/sous_ensemble
+          - /api/reference_fournisseurs
+          - /api/type_sous_ensembles
+          - /api/sous_ensembles
+          - /api/type_usinages
+          - /api/fournisseurs
+          - /api/traitements
+          - /api/matieres
+          - /api/articles
+          - /api/tarifs
+          - /api/plans

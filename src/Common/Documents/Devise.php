@@ -3,6 +3,7 @@
 namespace App\Common\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\ModelBundle\Validator\Iri;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,7 +46,6 @@ class Devise
      * @Assert\NotBlank
      */
     private $symbole;
-
 
     /**
      * Get id

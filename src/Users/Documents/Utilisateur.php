@@ -8,7 +8,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\SearchFilter;
 use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
-use App\Users\Controller\GetUserByUsername;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,9 +31,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     itemOperations={
  *          "get",
  *          "getByUsername"={
- *              "route_name"="api_test",
+ *              "route_name"="api_get_user_by_username",
  *          },
  *          "put"={"security"="is_granted('ROLE_ADMIN') or object == user"},
+ *          "patch"={"security"="is_granted('ROLE_ADMIN') or object == user"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object == user"}
  *     },
  * )
  *
