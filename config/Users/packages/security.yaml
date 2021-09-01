@@ -34,6 +34,9 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
             entry_point: http_basic
+        refresh-token:
+            pattern: ^/api/refresh_token
+            stateless: true
         main:
             lazy: true
             stateless: true
@@ -51,4 +54,5 @@ security:
     access_control:
         - { path: ^/api/docs, roles: ROLE_API }
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/refresh_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

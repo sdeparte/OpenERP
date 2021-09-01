@@ -16,3 +16,4 @@ doctrine_mongodb:
           dir: '%kernel.project_dir%/src/Users'
           prefix: App\Users\Documents
           is_bundle: false
+        GesdinetJWTRefreshTokenBundle: ~

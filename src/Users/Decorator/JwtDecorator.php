@@ -34,8 +34,13 @@ class JwtDecorator implements OpenApiFactoryInterface
                     'type' => 'string',
                     'readOnly' => true,
                 ],
+                'refresh_token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
             ],
         ]);
+
         $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -48,19 +53,35 @@ class JwtDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
-        $requestBody =
-            new Model\RequestBody(
-                'Generate new JWT Token',
-                new \ArrayObject([
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => '#/components/schemas/Credentials',
-                        ],
-                    ],
-                ])
-            );
+        $schemas['RefreshToken'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'refresh_token' => [
+                    'type' => 'string',
+                ],
+            ],
+        ]);
 
-        $pathItem = new Model\PathItem(
+        $openApi->getPaths()->addPath('/api/login_check', $this->getLoginCheckPathItem());
+        $openApi->getPaths()->addPath('/api/refresh_token', $this->getRefreshTokenPathItem());
+
+        return $openApi;
+    }
+
+    private function getLoginCheckPathItem()
+    {
+        $requestBody = new Model\RequestBody(
+            'Generate new JWT Token',
+            new \ArrayObject([
+                'application/json' => [
+                    'schema' => [
+                        '$ref' => '#/components/schemas/Credentials',
+                    ],
+                ],
+            ])
+        );
+
+        return new Model\PathItem(
             'JWT Token',
             null,
             null,
@@ -88,9 +109,48 @@ class JwtDecorator implements OpenApiFactoryInterface
                 $requestBody
             )
         );
+    }
 
-        $openApi->getPaths()->addPath('/api/login_check', $pathItem);
+    private function getRefreshTokenPathItem()
+    {
+        $requestBody = new Model\RequestBody(
+            'Generate new JWT Token',
+            new \ArrayObject([
+                'application/json' => [
+                    'schema' => [
+                        '$ref' => '#/components/schemas/RefreshToken',
+                    ],
+                ],
+            ])
+        );
 
-        return $openApi;
+        return new Model\PathItem(
+            'JWT Refresh-Token',
+            null,
+            null,
+            null,
+            null,
+            new Model\Operation(
+                'postRefreshTokenItem',
+                ['Token'],
+                [
+                    '200' => [
+                        'description' => 'Get JWT token',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Token',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'Get JWT token to renew login.',
+                '',
+                null,
+                [],
+                $requestBody
+            )
+        );
     }
 }

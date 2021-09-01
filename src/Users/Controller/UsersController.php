@@ -15,7 +15,7 @@ class UsersController extends AbstractController
 {
     /**
      * @Route(
-     *     methods={"GET"}
+     *     methods={"GET"},
      *     name="api_get_user_by_username",
      *     path="/utilisateurs/by_username/{id}",
      *     defaults={

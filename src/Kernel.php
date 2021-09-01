@@ -90,6 +90,19 @@ class Kernel extends BaseKernel
         }
     }
 
+    public function registerBundles(): iterable
+    {
+        $contents = require $this->getProjectDir().'/config/bundles.php';
+        foreach ($contents as $class => $envs) {
+            if (
+                ($envs['microServices'][$this->getMicroServiceName()] ?? $envs['microServices']['all'] ?? false) &&
+                ($envs['envs'][$this->environment] ?? $envs['envs']['all'] ?? false)
+            ) {
+                yield new $class();
+            }
+        }
+    }
+
     private function getMicroServiceName(): string
     {
         return getenv('MICRO_SERVICE_NAME');

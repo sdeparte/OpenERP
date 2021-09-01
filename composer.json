@@ -11,6 +11,7 @@
         "api-platform/core": "^2.6",
         "composer/package-versions-deprecated": "1.11.99.2",
         "doctrine/mongodb-odm-bundle": "^4.3",
+        "gesdinet/jwt-refresh-token-bundle": "^0.12.0",
         "lexik/jwt-authentication-bundle": "^2.12",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
