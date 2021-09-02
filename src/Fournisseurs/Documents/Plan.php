@@ -11,9 +11,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Plan
  *
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"plan:read"}},
+ *     denormalizationContext={"groups"={"plan:write"}}
+ * )
  *
- * @ODM\Document
+ * @ODM\Document(repositoryClass="App\Fournisseurs\Repositories\PlanRepository")
  */
 class Plan
 {
@@ -22,7 +25,7 @@ class Plan
      *
      * @ODM\Id(strategy="INCREMENT", type="int")
      *
-     * @Groups("article:read")
+     * @Groups({"plan:read"})
      */
     private $id;
 
@@ -32,7 +35,7 @@ class Plan
      * @ODM\Field
      * @Assert\NotBlank
      *
-     * @Groups("article:read")
+     * @Groups({"plan:read", "plan:write"})
      */
     private $nom;
 
@@ -42,7 +45,7 @@ class Plan
      * @ODM\Field
      * @Assert\NotBlank
      *
-     * @Groups("article:read")
+     * @Groups({"plan:read", "plan:write"})
      */
     private $description;
 
@@ -52,7 +55,7 @@ class Plan
      * @ODM\Field
      * @Assert\NotBlank
      *
-     * @Groups("article:read")
+     * @Groups({"plan:read", "plan:write"})
      */
     private $fichierUrl;
 
@@ -61,6 +64,8 @@ class Plan
      *
      * @ODM\Field
      * @Iri("Fournisseurs")
+     *
+     * @Groups({"plan:read", "plan:write"})
      */
     private $articleIri;
 
@@ -71,6 +76,8 @@ class Plan
      * @Assert\NotBlank
      *
      * @Groups("article:read")
+     *
+     * @Groups({"plan:read"})
      */
     private $indice = 'A';
 

@@ -4,6 +4,7 @@ namespace App\Fournisseurs\DataPersister;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Fournisseurs\Documents\Plan;
+use App\Fournisseurs\Repositories\PlanRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -46,6 +47,15 @@ class PlanDataPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
+        /** @var PlanRepository $repository */
+        $repository = $this->documentManager->getRepository(Plan::class);
+        $lastPlan = $repository->findLastIndiceOfArticle($data->getArticleIri());
+
+        if (!empty($lastPlan)) {
+            $indice = $lastPlan->getIndice();
+            $data->setIndice(++$indice);
+        }
+q
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 

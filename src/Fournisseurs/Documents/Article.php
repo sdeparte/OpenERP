@@ -13,13 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @ApiResource(
  *     normalizationContext={"groups"={"article:read"}},
- *     denormalizationContext={"groups"={"article:write"}},
- *     itemOperations={
- *          "get",
- *          "patch",
- *          "put",
- *          "delete"
- *     },
+ *     denormalizationContext={"groups"={"article:write"}}
  * )
  *
  * @ODM\Document(repositoryClass="App\Fournisseurs\Repositories\ArticleRepository")
