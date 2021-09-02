@@ -55,7 +55,7 @@ class PlanDataPersister implements ContextAwareDataPersisterInterface
             $indice = $lastPlan->getIndice();
             $data->setIndice(++$indice);
         }
-q
+
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 
