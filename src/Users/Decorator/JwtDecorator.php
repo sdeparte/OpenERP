@@ -25,6 +25,16 @@ class JwtDecorator implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
+
+        $this->buildSchema($openApi);
+
+        $openApi->getPaths()->addPath('/api/login_check', $this->getLoginCheckPathItem());
+        $openApi->getPaths()->addPath('/api/refresh_token', $this->getRefreshTokenPathItem());
+
+        return $openApi;
+    }
+
+    private function buildSchema(OpenApi $openApi) {
         $schemas = $openApi->getComponents()->getSchemas();
 
         $schemas['Token'] = new \ArrayObject([
@@ -61,11 +71,6 @@ class JwtDecorator implements OpenApiFactoryInterface
                 ],
             ],
         ]);
-
-        $openApi->getPaths()->addPath('/api/login_check', $this->getLoginCheckPathItem());
-        $openApi->getPaths()->addPath('/api/refresh_token', $this->getRefreshTokenPathItem());
-
-        return $openApi;
     }
 
     private function getLoginCheckPathItem()

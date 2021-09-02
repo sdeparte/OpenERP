@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Plan
@@ -20,6 +21,8 @@ class Plan
      * @var int
      *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups("article:read")
      */
     private $id;
 
@@ -28,6 +31,8 @@ class Plan
      *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups("article:read")
      */
     private $nom;
 
@@ -36,6 +41,8 @@ class Plan
      *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups("article:read")
      */
     private $description;
 
@@ -44,6 +51,8 @@ class Plan
      *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups("article:read")
      */
     private $fichierUrl;
 
@@ -60,6 +69,8 @@ class Plan
      *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups("article:read")
      */
     private $indice = 'A';
 

@@ -111,7 +111,7 @@ class Article
      *
      * @ODM\Field(type="collection")
      *
-     * @Groups({"article:read"})
+     * @Groups("article:read")
      */
     private $planIris = [];
 

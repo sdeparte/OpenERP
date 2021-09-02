@@ -6,3 +6,8 @@ services:
     App\Fournisseurs\:
         resource: '../../src/Fournisseurs'
         exclude: '../../src/Fournisseurs/{Entity,DependencyInjection,Tests,Kernel.php}/'
+
+    App\Fournisseurs\Decorator\ArticleDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\Fournisseurs\Decorator\ArticleDecorator.inner']
+        autoconfigure: false
