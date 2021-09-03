@@ -89,34 +89,7 @@ class Article
      *
      * @Groups({"article:read"})
      */
-    private $couleurIris = [];
-
-    /**
-     * @var array
-     *
-     * @ODM\Field(type="collection")
-     *
-     * @Groups({"article:read"})
-     */
-    private $matiereIris = [];
-
-    /**
-     * @var array
-     *
-     * @ODM\Field(type="collection")
-     *
-     * @Groups("article:read")
-     */
-    private $planIris = [];
-
-    /**
-     * @var array
-     *
-     * @ODM\Field(type="collection")
-     *
-     * @Groups({"article:read"})
-     */
-    private $tarifIris = [];
+    private $versionIris = [];
 
     /**
      * @return int
@@ -207,142 +180,6 @@ class Article
     }
 
     /**
-     * @return array
-     */
-    public function getCouleurIris(): array
-    {
-        return $this->couleurIris;
-    }
-
-    /**
-     * @param string $couleurIri
-     *
-     * @return Article
-     */
-    public function addCouleurIri(string $couleurIri): Article
-    {
-        if (!\in_array($couleurIri, $this->couleurIris)) {
-            $this->couleurIris[] = $couleurIri;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $couleurIri
-     *
-     * @return Article
-     */
-    public function removeCouleurIri(string $couleurIri): Article
-    {
-        $this->couleurIris = \array_diff($this->couleurIris, [$couleurIri]);
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMatiereIris(): array
-    {
-        return $this->matiereIris;
-    }
-
-    /**
-     * @param string $matiereIris
-     *
-     * @return Article
-     */
-    public function addMatiereIri(string $matiereIris): Article
-    {
-        if (!\in_array($matiereIris, $this->matiereIris)) {
-            $this->matiereIris[] = $matiereIris;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $matiereIris
-     *
-     * @return Article
-     */
-    public function removeMatiereIri(string $matiereIris): Article
-    {
-        $this->matiereIris = \array_diff($this->matiereIris, [$matiereIris]);
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPlanIris(): array
-    {
-        return $this->planIris;
-    }
-
-    /**
-     * @param string $planIri
-     *
-     * @return Article
-     */
-    public function addPlanIri(string $planIri): Article
-    {
-        if (!\in_array($planIri, $this->planIris)) {
-            $this->planIris[] = $planIri;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $planIri
-     *
-     * @return Article
-     */
-    public function removePlanIri(string $planIri): Article
-    {
-        $this->planIris = \array_diff($this->planIris, [$planIri]);
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTarifIris(): array
-    {
-        return $this->tarifIris;
-    }
-
-    /**
-     * @param string $tarifIri
-     *
-     * @return Article
-     */
-    public function addTarifIri(string $tarifIri): Article
-    {
-        if (!\in_array($tarifIri, $this->tarifIris)) {
-            $this->tarifIris[] = $tarifIri;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $tarifIri
-     *
-     * @return Article
-     */
-    public function removeTarifIri(string $tarifIri): Article
-    {
-        $this->tarifIris = \array_diff($this->tarifIris, [$tarifIri]);
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isValide(): bool
@@ -352,12 +189,44 @@ class Article
 
     /**
      * @param bool $valide
-     *
      * @return Article
      */
     public function setValide(bool $valide): Article
     {
         $this->valide = $valide;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVersionIris(): array
+    {
+        return $this->versionIris;
+    }
+
+    /**
+     * @param string $versionIri
+     *
+     * @return Article
+     */
+    public function addVersionIri(string $versionIri): Article
+    {
+        if (!\in_array($versionIri, $this->versionIris)) {
+            $this->versionIris[] = $versionIri;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $versionIri
+     *
+     * @return Article
+     */
+    public function removeVersionIri(string $versionIri): Article
+    {
+        $this->versionIris = \array_diff($this->versionIris, [$versionIri]);
 
         return $this;
     }

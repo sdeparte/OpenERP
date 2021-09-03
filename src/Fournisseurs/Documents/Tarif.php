@@ -69,38 +69,6 @@ class Tarif
     private $referenceFournisseurIri;
 
     /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     */
-    private $planIri;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     */
-    private $traitementIri;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     */
-    private $matiereIri;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     */
-    private $articleIri;
-
-    /**
      * @return int
      */
     public function getId(): int
@@ -204,86 +172,6 @@ class Tarif
     public function setReferenceFournisseurIri(string $referenceFournisseurIri): Tarif
     {
         $this->referenceFournisseurIri = $referenceFournisseurIri;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlanIri(): string
-    {
-        return $this->planIri;
-    }
-
-    /**
-     * @param string $planIri
-     *
-     * @return Tarif
-     */
-    public function setPlanIri(string $planIri): Tarif
-    {
-        $this->planIri = $planIri;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTraitementIri(): string
-    {
-        return $this->traitementIri;
-    }
-
-    /**
-     * @param string $traitementIri
-     *
-     * @return Tarif
-     */
-    public function setTraitementIri(string $traitementIri): Tarif
-    {
-        $this->traitementIri = $traitementIri;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMatiereIri(): string
-    {
-        return $this->matiereIri;
-    }
-
-    /**
-     * @param string $matiereIri
-     *
-     * @return Tarif
-     */
-    public function setMatiereIri(string $matiereIri): Tarif
-    {
-        $this->matiereIri = $matiereIri;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getArticleIri(): string
-    {
-        return $this->articleIri;
-    }
-
-    /**
-     * @param string $articleIri
-     *
-     * @return Tarif
-     */
-    public function setArticleIri(string $articleIri): Tarif
-    {
-        $this->articleIri = $articleIri;
 
         return $this;
     }

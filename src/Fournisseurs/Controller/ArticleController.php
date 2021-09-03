@@ -19,13 +19,14 @@ class ArticleController extends AbstractController
 {
     /**
      * @Route(
-     *     methods={"PATCH"},
-     *     name="api_add_tarif",
-     *     path="/articles/{id}/add_tarif"
+     *     methods={"POST"},
+     *     name="api_add_version",
+     *     path="/articles/{id}/add_version"
      * )
      */
-    public function addTarif(int $id, DocumentManager $documentManager, ValidatorInterface $validator, Request $request)
+    public function addVersion(int $id, DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
     {
+        /** @var Article $article */
         $article = $documentManager->getRepository(Article::class)->find($id);
 
         if (empty($article)) {
@@ -34,8 +35,7 @@ class ArticleController extends AbstractController
 
         $requestContent = json_decode($request->getContent(), true);
 
-        /** @var Article $article */
-        $article->addTarifIri($requestContent['tarifIri']);
+        $article->addVersionIri($requestContent['versionIri']);
 
         $validator->validate($article);
 
@@ -48,74 +48,19 @@ class ArticleController extends AbstractController
     /**
      * @Route(
      *     methods={"POST"},
-     *     name="api_remove_tarif",
-     *     path="/articles/remove_tarif"
+     *     name="api_remove_version",
+     *     path="/articles/remove_version"
      * )
      */
-    public function removeTarif(DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
+    public function removeVersion(DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
     {
         $requestContent = json_decode($request->getContent(), true);
 
-        /** @var ArticleRepository $articles */
-        $articles = $documentManager->getRepository(Article::class)->findByTarifIri($requestContent['tarifIri']);
-
-        foreach ($articles as $article) {
-            $article->removeTarifIri($requestContent['tarifIri']);
-
-            $validator->validate($article);
-
-            $documentManager->persist($article);
-        }
-
-        $documentManager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * @Route(
-     *     methods={"POST"},
-     *     name="api_add_plan",
-     *     path="/articles/{id}/add_plan"
-     * )
-     */
-    public function addPlan(int $id, DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
-    {
-        $article = $documentManager->getRepository(Article::class)->find($id);
-
-        if (empty($article)) {
-            throw new NotFoundHttpException('Article not found');
-        }
-
-        $requestContent = json_decode($request->getContent(), true);
+        $articles = $documentManager->getRepository(Article::class)->findByVersionIri($requestContent['versionIri']);
 
         /** @var Article $article */
-        $article->addPlanIri($requestContent['planIri']);
-
-        $validator->validate($article);
-
-        $documentManager->persist($article);
-        $documentManager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * @Route(
-     *     methods={"POST"},
-     *     name="api_remove_plan",
-     *     path="/articles/remove_plan"
-     * )
-     */
-    public function removePlan(DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
-    {
-        $requestContent = json_decode($request->getContent(), true);
-
-        /** @var ArticleRepository $articles */
-        $articles = $documentManager->getRepository(Article::class)->findByPlanIri($requestContent['planIri']);
-
         foreach ($articles as $article) {
-            $article->removePlanIri($requestContent['planIri']);
+            $article->removeVersionIri($requestContent['versionIri']);
 
             $validator->validate($article);
 

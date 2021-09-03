@@ -29,7 +29,9 @@ class UniqueValidator extends ConstraintValidator
 
         foreach ($fields as $field) {
             foreach ($keys as $key) {
-                if (str_contains($key, $constraint->class) && str_contains($key, $field)) {
+                if ((str_contains($key, $constraint->class) || preg_match('#\*#', $key)) &&
+                    str_contains($key, $field)
+                ) {
                     $findBy[$field] = $values[$key];
                     break;
                 }

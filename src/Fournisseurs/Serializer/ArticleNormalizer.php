@@ -35,51 +35,15 @@ class ArticleNormalizer implements ContextAwareNormalizerInterface, NormalizerAw
             $normalized['sousEnsembleIri'] = \json_decode($response->getContent(), true);
         }
 
-        $normalized['couleurIris'] = [];
+        $normalized['versionIris'] = [];
 
-        foreach ($object->getCouleurIris() as $couleurIri) {
-            $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$couleurIri);
-
-            if (Response::HTTP_OK === $response->getStatusCode()) {
-                $normalized['couleurIris'][] = \json_decode($response->getContent(), true);
-            } else {
-                $normalized['couleurIris'][] = $couleurIri;
-            }
-        }
-
-        $normalized['matiereIris'] = [];
-
-        foreach ($object->getMatiereIris() as $matiereIri) {
-            $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$matiereIri);
+        foreach ($object->getVersionIris() as $versionIri) {
+            $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$versionIri);
 
             if (Response::HTTP_OK === $response->getStatusCode()) {
-                $normalized['matiereIris'][] = \json_decode($response->getContent(), true);
+                $normalized['versionIris'][] = \json_decode($response->getContent(), true);
             } else {
-                $normalized['matiereIris'][] = $matiereIri;
-            }
-        }
-
-        $normalized['planIris'] = [];
-
-        foreach ($object->getPlanIris() as $planIri) {
-            $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$planIri);
-
-            if (Response::HTTP_OK === $response->getStatusCode()) {
-                $normalized['planIris'][] = \json_decode($response->getContent(), true);
-            } else {
-                $normalized['planIris'][] = $planIri;
-            }
-        }
-
-        $normalized['tarifIris'] = [];
-
-        foreach ($object->getTarifIris() as $tarifIri) {
-            $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$tarifIri);
-
-            if (Response::HTTP_OK === $response->getStatusCode()) {
-                $normalized['tarifIris'][] = \json_decode($response->getContent(), true);
-            } else {
-                $normalized['tarifIris'][] = $tarifIri;
+                $normalized['versionIris'][] = $versionIri;
             }
         }
 

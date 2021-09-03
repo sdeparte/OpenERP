@@ -28,10 +28,8 @@ class ArticleDecorator implements OpenApiFactoryInterface
 
         $this->buildSchema($openApi);
 
-        $openApi->getPaths()->addPath('/articles/{id}/add_tarif', $this->getAddTarifPathItem());
-        $openApi->getPaths()->addPath('/articles/remove_tarif', $this->getRemoveTarifPathItem());
-        $openApi->getPaths()->addPath('/articles/{id}/add_plan', $this->getAddPlanPathItem());
-        $openApi->getPaths()->addPath('/articles/remove_plan', $this->getRemovePlanPathItem());
+        $openApi->getPaths()->addPath('/articles/{id}/add_version', $this->getAddVersionPathItem());
+        $openApi->getPaths()->addPath('/articles/remove_version', $this->getRemoveVersionPathItem());
 
         return $openApi;
     }
@@ -39,26 +37,17 @@ class ArticleDecorator implements OpenApiFactoryInterface
     private function buildSchema(OpenApi $openApi) {
         $schemas = $openApi->getComponents()->getSchemas();
 
-        $schemas['Tarif'] = new \ArrayObject([
+        $schemas['Version'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'tarif_iri' => [
-                    'type' => 'string',
-                ],
-            ],
-        ]);
-
-        $schemas['Plan'] = new \ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'plan_iri' => [
+                'versionIri' => [
                     'type' => 'string',
                 ],
             ],
         ]);
     }
 
-    private function getAddTarifPathItem()
+    private function getAddVersionPathItem()
     {
         $parameter = new Model\Parameter(
             'id',
@@ -68,31 +57,31 @@ class ArticleDecorator implements OpenApiFactoryInterface
         );
 
         $requestBody = new Model\RequestBody(
-            'Add Tarif to Article',
+            'Add Version to Article',
             new \ArrayObject([
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/Tarif',
+                        '$ref' => '#/components/schemas/Version',
                     ],
                 ],
             ])
         );
 
         return new Model\PathItem(
-            'Add Tarif to Article',
+            'Add Version to Article',
             null,
             null,
             null,
             null,
             new Model\Operation(
-                'postAddTarifToArticleItem',
+                'postAddVersionToArticleItem',
                 ['Article'],
                 [
                     '204' => [
-                        'description' => 'Tarif added to Article',
+                        'description' => 'Version added to Article',
                     ],
                 ],
-                'Add Tarif to Article.',
+                'Add Version to Article.',
                 '',
                 null,
                 [$parameter],
@@ -101,113 +90,34 @@ class ArticleDecorator implements OpenApiFactoryInterface
         );
     }
 
-    private function getRemoveTarifPathItem()
+    private function getRemoveVersionPathItem()
     {
         $requestBody = new Model\RequestBody(
-            'Remove Tarif from all Articles',
+            'Remove Version from all Articles',
             new \ArrayObject([
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/Tarif',
+                        '$ref' => '#/components/schemas/Version',
                     ],
                 ],
             ])
         );
 
         return new Model\PathItem(
-            'Remove Tarif from all Articles',
+            'Remove Version from all Articles',
             null,
             null,
             null,
             null,
             new Model\Operation(
-                'postRemoveTarifToArticleItem',
+                'postRemoveVersionToArticleItem',
                 ['Article'],
                 [
                     '204' => [
-                        'description' => 'Tarif removed from all Articles',
+                        'description' => 'Version removed from all Articles',
                     ],
                 ],
-                'Remove Tarif from all Articles.',
-                '',
-                null,
-                [],
-                $requestBody
-            )
-        );
-    }
-
-    private function getAddPlanPathItem()
-    {
-        $parameter = new Model\Parameter(
-            'id',
-            'path',
-            'Resource identifier',
-            true
-        );
-
-        $requestBody = new Model\RequestBody(
-            'Add Plan to Article',
-            new \ArrayObject([
-                'application/json' => [
-                    'schema' => [
-                        '$ref' => '#/components/schemas/Plan',
-                    ],
-                ],
-            ])
-        );
-
-        return new Model\PathItem(
-            'Add Plan to Article',
-            null,
-            null,
-            null,
-            null,
-            new Model\Operation(
-                'postAddPlanToArticleItem',
-                ['Article'],
-                [
-                    '204' => [
-                        'description' => 'Plan added to Article',
-                    ],
-                ],
-                'Add Plan to Article.',
-                '',
-                null,
-                [$parameter],
-                $requestBody
-            )
-        );
-    }
-
-    private function getRemovePlanPathItem()
-    {
-        $requestBody = new Model\RequestBody(
-            'Remove Plan from all Articles',
-            new \ArrayObject([
-                'application/json' => [
-                    'schema' => [
-                        '$ref' => '#/components/schemas/Plan',
-                    ],
-                ],
-            ])
-        );
-
-        return new Model\PathItem(
-            'Remove Plan from all Articles',
-            null,
-            null,
-            null,
-            null,
-            new Model\Operation(
-                'postRemovePlanToArticleItem',
-                ['Article'],
-                [
-                    '204' => [
-                        'description' => 'Plan removed from all Articles',
-                    ],
-                ],
-                'Remove Plan from all Articles.',
+                'Remove Version from all Articles.',
                 '',
                 null,
                 [],

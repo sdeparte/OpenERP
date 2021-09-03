@@ -9,14 +9,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * SousEnsemble
+ * Parametre
  *
  * @ApiResource
  *
  * @ODM\Document
- * @Unique(self::class, fields={"type", "numero"}, message="Un sous ensemble existe déjà avec ces type / numéro.")
+ * @Unique(self::class, fields={"typeIri", "nom", "versionIri"}, message="Ce parametre existe déjà.")
  */
-class SousEnsemble
+class Parametre
 {
     /**
      * @var int
@@ -32,23 +32,7 @@ class SousEnsemble
      * @Iri("Fournisseurs")
      * @Assert\NotBlank
      */
-    private $typeIri;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Assert\NotBlank
-     * @Assert\Regex("/^\d+$/", message="Ce champ ne peut être composé que de chiffres")
-     * @Assert\NotEqualTo("00", message="Ce champ ne peut être égale à '00'")
-     * @Assert\Length(
-     *      min = 2,
-     *      max = 2,
-     *      minMessage = "Veuillez saisire un nombre à 2 chiffres",
-     *      maxMessage = "Veuillez saisire un nombre à 2 chiffres"
-     * )
-     */
-    private $numero = '01';
+    protected $typeIri;
 
     /**
      * @var string
@@ -56,7 +40,15 @@ class SousEnsemble
      * @ODM\Field
      * @Assert\NotBlank
      */
-    private $nom;
+    protected $nom;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field
+     * @Iri("Fournisseurs")
+     */
+    protected $versionIri;
 
     /**
      * @return int
@@ -64,18 +56,6 @@ class SousEnsemble
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $typeIri
-     *
-     * @return SousEnsemble
-     */
-    public function setTypeIri(string $typeIri): SousEnsemble
-    {
-        $this->typeIri = $typeIri;
-
-        return $this;
     }
 
     /**
@@ -87,31 +67,23 @@ class SousEnsemble
     }
 
     /**
-     * @param string $numero
+     * @param string $typeIri
      *
-     * @return SousEnsemble
+     * @return Parametre
      */
-    public function setNumero(string $numero): SousEnsemble
+    public function setTypeIri(string $typeIri): Parametre
     {
-        $this->numero = $numero;
+        $this->typeIri = $typeIri;
 
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getNumero(): string
-    {
-        return $this->numero;
-    }
-
-    /**
      * @param string $nom
      *
-     * @return SousEnsemble
+     * @return Parametre
      */
-    public function setNom($nom): SousEnsemble
+    public function setNom($nom): Parametre
     {
         $this->nom = ucfirst($nom);
 
@@ -124,5 +96,25 @@ class SousEnsemble
     public function getNom(): string
     {
         return $this->nom;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersionIri(): string
+    {
+        return $this->versionIri;
+    }
+
+    /**
+     * @param string $versionIri
+     *
+     * @return Parametre
+     */
+    public function setVersionIri(string $versionIri): Parametre
+    {
+        $this->versionIri = $versionIri;
+
+        return $this;
     }
 }

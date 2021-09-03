@@ -49,11 +49,11 @@ services:
         paths:
           - /api/reference_fournisseurs
           - /api/type_sous_ensembles
+          - /api/parametre_fichiers
+          - /api/type_parametres
           - /api/sous_ensembles
-          - /api/type_usinages
           - /api/fournisseurs
-          - /api/traitements
-          - /api/matieres
+          - /api/parametres
+          - /api/versions
           - /api/articles
           - /api/tarifs
-          - /api/plans

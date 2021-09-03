@@ -6,11 +6,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * ReferenceFournisseur
  *
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"referenceFournisseur:read"}},
+ *     denormalizationContext={"groups"={"referenceFournisseur:write"}}
+ * )
  *
  * @ODM\Document
  */
@@ -20,6 +24,8 @@ class ReferenceFournisseur
      * @var int
      *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"referenceFournisseur:read"})
      */
     private $id;
 
@@ -27,7 +33,8 @@ class ReferenceFournisseur
      * @var string
      *
      * @ODM\Field
-     * @Iri("Fournisseurs")
+     *
+     * @Groups({"referenceFournisseur:read", "referenceFournisseur:write"})
      */
     private $fournisseurIri;
 
@@ -36,16 +43,29 @@ class ReferenceFournisseur
      *
      * @ODM\Field
      * @Iri("Fournisseurs")
+     *
+     * @Groups({"referenceFournisseur:read", "referenceFournisseur:write"})
      */
-    private $articleIri;
+    private $versionIri;
 
     /**
      * @var string
      *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups({"referenceFournisseur:read", "referenceFournisseur:write"})
      */
     private $reference;
+
+    /**
+     * @var array
+     *
+     * @ODM\Field(type="collection")
+     *
+     * @Groups({"referenceFournisseur:read"})
+     */
+    private $tarifIris = [];
 
     /**
      * @return int
@@ -78,19 +98,19 @@ class ReferenceFournisseur
     /**
      * @return string
      */
-    public function getArticleIri(): string
+    public function getVersionIri(): string
     {
-        return $this->articleIri;
+        return $this->versionIri;
     }
 
     /**
-     * @param string $articleIri
+     * @param string $versionIri
      *
      * @return ReferenceFournisseur
      */
-    public function setArticleIri(string $articleIri): ReferenceFournisseur
+    public function setVersionIri(string $versionIri): ReferenceFournisseur
     {
-        $this->articleIri = $articleIri;
+        $this->versionIri = $versionIri;
 
         return $this;
     }
@@ -111,6 +131,40 @@ class ReferenceFournisseur
     public function setReference(string $reference): ReferenceFournisseur
     {
         $this->reference = $reference;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTarifIris(): array
+    {
+        return $this->tarifIris;
+    }
+
+    /**
+     * @param string $tarifIri
+     *
+     * @return ReferenceFournisseur
+     */
+    public function addTarifIri(string $tarifIri): ReferenceFournisseur
+    {
+        if (!\in_array($tarifIri, $this->tarifIris)) {
+            $this->tarifIris[] = $tarifIri;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $tarifIri
+     *
+     * @return ReferenceFournisseur
+     */
+    public function removeTarifIri(string $tarifIri): ReferenceFournisseur
+    {
+        $this->tarifIris = \array_diff($this->tarifIris, [$tarifIri]);
 
         return $this;
     }

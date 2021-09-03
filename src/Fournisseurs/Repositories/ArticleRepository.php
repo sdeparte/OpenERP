@@ -19,18 +19,10 @@ class ArticleRepository extends DocumentRepository
             ->getSingleResult();
     }
 
-    public function findByPlanIri(string $articleIri): iterable
+    public function findByVersionIri(string $articleIri): iterable
     {
         return $this->dm->createQueryBuilder(Article::class)
-            ->field('planIris')->equals($articleIri)
-            ->getQuery()
-            ->execute();
-    }
-
-    public function findByTarifIri(string $tarifIri): iterable
-    {
-        return $this->dm->createQueryBuilder(Article::class)
-            ->field('tarifIris')->equals($tarifIri)
+            ->field('versionIris')->equals($articleIri)
             ->getQuery()
             ->execute();
     }

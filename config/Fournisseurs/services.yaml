@@ -11,3 +11,8 @@ services:
         decorates: 'api_platform.openapi.factory'
         arguments: ['@App\Fournisseurs\Decorator\ArticleDecorator.inner']
         autoconfigure: false
+
+    App\Fournisseurs\Decorator\VersionDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\Fournisseurs\Decorator\VersionDecorator.inner']
+        autoconfigure: false

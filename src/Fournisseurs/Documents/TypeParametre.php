@@ -8,14 +8,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Matiere
+ * TypeParametre
  *
  * @ApiResource
  *
  * @ODM\Document
- * @Unique(self::class, fields={"nom"}, message="Une matière existe déjà avec ce nom.")
+ * @Unique(self::class, fields={"nom"}, message="Un type de parametre existe déjà avec ce nom.")
  */
-class Matiere
+class TypeParametre
 {
     /**
      * @var int
@@ -43,9 +43,9 @@ class Matiere
     /**
      * @param string $nom
      *
-     * @return Matiere
+     * @return TypeParametre
      */
-    public function setNom($nom): Matiere
+    public function setNom($nom): TypeParametre
     {
         $this->nom = ucfirst($nom);
 
