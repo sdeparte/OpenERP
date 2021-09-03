@@ -5,6 +5,7 @@ namespace App\Fournisseurs\DataPersister;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Fournisseurs\Documents\Parametre;
+use App\Fournisseurs\Documents\ParametreFichier;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -58,8 +59,19 @@ class ParametreDataPersister implements ContextAwareDataPersisterInterface
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 
+        switch (get_class($data))
+        {
+            case ParametreFichier::class:
+                $type = 'parametre_fichiers';
+                break;
+
+            default:
+                $type = 'parametres';
+                break;
+        }
+
         $response = $this->httpClient->request('POST', 'http://api.erp.docker'.$data->getVersionIri().'/add_parametre', [
-            'body' => '{"parametreIri": "/api/parametres/'.$data->getId().'"}',
+            'body' => '{"parametreIri": "/api/'.$type.'/'.$data->getId().'"}',
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
@@ -75,8 +87,19 @@ class ParametreDataPersister implements ContextAwareDataPersisterInterface
      */
     public function remove($data, array $context = [])
     {
+        switch (get_class($data))
+        {
+            case ParametreFichier::class:
+                $type = 'parametre_fichiers';
+                break;
+
+            default:
+                $type = 'parametres';
+                break;
+        }
+
         $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/versions/remove_parametre', [
-            'body' => '{"parametreIri": "/api/parametres/'.$data->getId().'"}',
+            'body' => '{"parametreIri": "/api/'.$type.'/'.$data->getId().'"}',
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
