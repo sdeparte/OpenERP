@@ -4,8 +4,11 @@ namespace App\Fournisseurs\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Tarif
@@ -17,56 +20,65 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Tarif
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string|null
-     *
      * @ODM\Field
+     *
+     * @Groups({"article:read", "version:read", "tarif:read", "tarif:write"})
      */
-    private $devis = null;
+    private ?string $devis = null;
 
     /**
-     * @var float
-     *
      * @ODM\Field(type="float")
      * @Assert\Type(
      *     type="float",
      *     message="{{ value }} n'est pas une quantité valide."
      * )
+     *
+     * @Groups({"article:read", "version:read", "tarif:read", "tarif:write"})
      */
-    private $quantite;
+    private float $quantite;
 
     /**
-     * @var float
-     *
      * @ODM\Field(type="float")
      * @Assert\Type(
      *     type="float",
      *     message="{{ value }} n'est pas un prix unitaire valide."
      * )
+     *
+     * @Groups({"article:read", "version:read", "tarif:read", "tarif:write"})
      */
-    private $prixUnitHT;
+    private float $prixUnitHT;
 
     /**
-     * @var string
-     *
      * @ODM\Field
-     * @Iri("Common")
+     * @Iri({"Devise"})
+     *
+     * @Groups({"article:read", "version:read", "tarif:read", "tarif:write"})
      */
-    private $deviseIri;
+    private string $deviseIri;
 
     /**
-     * @var string
+     * @ODM\ReferenceOne(targetDocument=ReferenceFournisseur::class)
      *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
+     * @Groups({"article:read", "version:read", "tarif:read", "tarif:write"})
      */
-    private $referenceFournisseurIri;
+    private ReferenceFournisseur $referenceFournisseurIri;
+
+    /**
+     * @ODM\ReferenceOne(targetDocument=Parametre::class)
+     *
+     * @Groups({"article:read", "version:read", "tarif:read"})
+     */
+    private Collection $parametreIris;
+
+    public function __construct()
+    {
+        $this->parametreIris = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -172,6 +184,29 @@ class Tarif
     public function setReferenceFournisseurIri(string $referenceFournisseurIri): Tarif
     {
         $this->referenceFournisseurIri = $referenceFournisseurIri;
+
+        return $this;
+    }
+
+    public function getParametreIris(): Collection
+    {
+        return $this->parametreIris;
+    }
+
+    public function addParametreIri(Parametre $parametreIri): Tarif
+    {
+        if (!$this->parametreIris->contains($parametreIri)) {
+            $this->parametreIris->add($parametreIri);
+        }
+
+        return $this;
+    }
+
+    public function removeParametreIri(Parametre $parametreIri): Tarif
+    {
+        if (!$this->parametreIris->contains($parametreIri)) {
+            $this->parametreIris->add($parametreIri);
+        }
 
         return $this;
     }

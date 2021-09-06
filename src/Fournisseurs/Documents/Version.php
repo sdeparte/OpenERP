@@ -5,13 +5,13 @@ namespace App\Fournisseurs\Documents;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Version
- *
  * @ApiResource(
  *     normalizationContext={"groups"={"version:read"}},
  *     denormalizationContext={"groups"={"version:write"}}
@@ -23,73 +23,57 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Version
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
      *
      * @Groups({"version:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      *
-     * @Groups({"version:read"})
+     * @Groups({"article:read", "version:read"})
      */
-    private $lettres = 'A';
+    private string $lettres = 'A';
 
     /**
-     * @var string
+     * @ODM\ReferenceOne(targetDocument=Article::class)
      *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     *
-     * @Groups({"version:read", "version:write"})
+     * @Groups({"article:read", "version:read", "version:write"})
      */
-    private $articleIri;
+    private Article $articleIri;
 
     /**
-     * @var array
+     * @ODM\EmbedMany(targetDocument=ReferenceFournisseur::class)
      *
-     * @ODM\Field(type="collection")
-     *
-     * @Groups({"version:read"})
+     * @Groups({"article:read", "version:read"})
      */
-    private $referenceFournisseurIris = [];
+    private Collection $referenceFournisseurIris;
 
     /**
-     * @var array
+     * @ODM\EmbedMany(targetDocument=Parametre::class)
      *
-     * @ODM\Field(type="collection")
-     *
-     * @Groups({"version:read"})
+     * @Groups({"article:read", "version:read"})
      */
-    private $parametreIris = [];
+    private Collection $parametreIris;
 
-    /**
-     * @return int
-     */
+    public function __construct()
+    {
+        $this->referenceFournisseurIris = new ArrayCollection();
+        $this->parametreIris = new ArrayCollection();
+    }
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getLettres(): string
     {
         return $this->lettres;
     }
 
-    /**
-     * @param string $lettres
-     *
-     * @return Version
-     */
     public function setLettres(string $lettres): Version
     {
         $this->lettres = $lettres;
@@ -97,90 +81,60 @@ class Version
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getArticleIri(): string
+    public function getArticleIri(): Article
     {
         return $this->articleIri;
     }
 
-    /**
-     * @param string $articleIri
-     *
-     * @return Version
-     */
-    public function setArticleIri(string $articleIri): Version
+    public function setArticleIri(Article $articleIri): Version
     {
         $this->articleIri = $articleIri;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getReferenceFournisseurIris(): array
+    public function getReferenceFournisseurIris(): Collection
     {
         return $this->referenceFournisseurIris;
     }
 
-    /**
-     * @param string $referenceFournisseurIri
-     *
-     * @return Version
-     */
-    public function addReferenceFournisseurIri(string $referenceFournisseurIri): Version
+    public function addReferenceFournisseurIri(ReferenceFournisseur $referenceFournisseurIri): Version
     {
-        if (!\in_array($referenceFournisseurIri, $this->referenceFournisseurIris)) {
-            $this->referenceFournisseurIris[] = $referenceFournisseurIri;
+        if (!$this->referenceFournisseurIris->contains($referenceFournisseurIri)) {
+            $this->referenceFournisseurIris->add($referenceFournisseurIri);
         }
 
         return $this;
     }
 
-    /**
-     * @param string $referenceFournisseurIri
-     *
-     * @return Version
-     */
-    public function removeReferenceFournisseurIri(string $referenceFournisseurIri): Version
+    public function removeReferenceFournisseurIri(ReferenceFournisseur $referenceFournisseurIri): Version
     {
-        $this->referenceFournisseurIris = \array_diff($this->referenceFournisseurIris, [$referenceFournisseurIri]);
+        if (!$this->referenceFournisseurIris->contains($referenceFournisseurIri)) {
+            $this->referenceFournisseurIris->add($referenceFournisseurIri);
+        }
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getParametreIris(): array
+    public function getParametreIris(): Collection
     {
         return $this->parametreIris;
     }
 
-    /**
-     * @param string $parametreIri
-     *
-     * @return Version
-     */
-    public function addParametreIri(string $parametreIri): Version
+    public function addParametreIri(Parametre $parametreIri): Version
     {
-        if (!\in_array($parametreIri, $this->parametreIris)) {
-            $this->parametreIris[] = $parametreIri;
+        if (!$this->parametreIris->contains($parametreIri)) {
+            $this->parametreIris->add($parametreIri);
         }
 
         return $this;
     }
 
-    /**
-     * @param string $parametreIri
-     *
-     * @return Version
-     */
-    public function removeParametreIri(string $parametreIri): Version
+    public function removeParametreIri(Parametre $parametreIri): Version
     {
-        $this->parametreIris = \array_diff($this->parametreIris, [$parametreIri]);
+        if (!$this->parametreIris->contains($parametreIri)) {
+            $this->parametreIris->add($parametreIri);
+        }
 
         return $this;
     }

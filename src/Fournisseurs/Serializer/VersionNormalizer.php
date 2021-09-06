@@ -63,6 +63,6 @@ class VersionNormalizer implements ContextAwareNormalizerInterface, NormalizerAw
             return false;
         }
 
-        return $data instanceof Version;
+        return false;//$data instanceof Version;
     }
 }

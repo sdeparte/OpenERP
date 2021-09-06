@@ -2,8 +2,9 @@
 
 namespace App\Fournisseurs\Controller;
 
+use App\Fournisseurs\Documents\Parametre;
+use App\Fournisseurs\Documents\ReferenceFournisseur;
 use App\Fournisseurs\Documents\Version;
-use App\Fournisseurs\Repositories\VersionRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,16 +27,23 @@ class VersionController extends AbstractController
      */
     public function addReferenceFournisseur(int $id, DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
     {
+        $requestContent = json_decode($request->getContent(), true);
+
         /** @var Version $version */
         $version = $documentManager->getRepository(Version::class)->find($id);
 
         if (empty($version)) {
-            throw new NotFoundHttpException('Version not found');
+            throw new NotFoundHttpException("Version #$id not found");
         }
 
-        $requestContent = json_decode($request->getContent(), true);
+        /** @var ReferenceFournisseur $referenceFournisseur */
+        $referenceFournisseur = $documentManager->getRepository(ReferenceFournisseur::class)->find($requestContent['referenceFournisseurId']);
 
-        $version->addReferenceFournisseurIri($requestContent['referenceFournisseurIri']);
+        if (empty($referenceFournisseur)) {
+            throw new NotFoundHttpException('Reference Fournisseur #'.$requestContent['referenceFournisseurId'].' not found');
+        }
+
+        $version->addReferenceFournisseurIri($referenceFournisseur);
 
         $validator->validate($version);
 
@@ -56,11 +64,18 @@ class VersionController extends AbstractController
     {
         $requestContent = json_decode($request->getContent(), true);
 
-        $versions = $documentManager->getRepository(Version::class)->findByReferenceFournisseurIri($requestContent['referenceFournisseurIri']);
+        /** @var ReferenceFournisseur $referenceFournisseur */
+        $referenceFournisseur = $documentManager->getRepository(ReferenceFournisseur::class)->find($requestContent['parametreId']);
+
+        if (empty($referenceFournisseur)) {
+            throw new NotFoundHttpException('Reference Fournisseur #'.$requestContent['referenceFournisseurId'].' not found');
+        }
+
+        $versions = $documentManager->getRepository(Version::class)->findByReferenceFournisseurIri($requestContent['referenceFournisseurId']);
 
         /** @var Version $version */
         foreach ($versions as $version) {
-            $version->removeReferenceFournisseurIri($requestContent['referenceFournisseurIri']);
+            $version->removeReferenceFournisseurIri($referenceFournisseur);
 
             $validator->validate($version);
 
@@ -81,16 +96,24 @@ class VersionController extends AbstractController
      */
     public function addParametre(int $id, DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
     {
+        dump($request->getContent());
+        $requestContent = json_decode($request->getContent(), true);
+
         /** @var Version $version */
         $version = $documentManager->getRepository(Version::class)->find($id);
 
         if (empty($version)) {
-            throw new NotFoundHttpException('Version not found');
+            throw new NotFoundHttpException("Version #$id not found");
         }
 
-        $requestContent = json_decode($request->getContent(), true);
+        /** @var Parametre $parametre */
+        $parametre = $documentManager->getRepository($requestContent['parametreClass'])->find($requestContent['parametreId']);
 
-        $version->addParametreIri($requestContent['parametreIri']);
+        if (empty($parametre)) {
+            throw new NotFoundHttpException('Parametre #'.$requestContent['parametreId'].' not found');
+        }
+
+        $version->addParametreIri($parametre);
 
         $validator->validate($version);
 
@@ -111,11 +134,18 @@ class VersionController extends AbstractController
     {
         $requestContent = json_decode($request->getContent(), true);
 
-        $versions = $documentManager->getRepository(Version::class)->findByParametreIri($requestContent['parametreIri']);
+        /** @var Parametre $parametre */
+        $parametre = $documentManager->getRepository($requestContent['parametreClass'])->find($requestContent['parametreId']);
+
+        if (empty($parametre)) {
+            throw new NotFoundHttpException('Parametre #'.$requestContent['parametreId'].' not found');
+        }
+
+        $versions = $documentManager->getRepository(Version::class)->findByParametreIri($requestContent['parametreId']);
 
         /** @var Version $version */
         foreach ($versions as $version) {
-            $version->removeParametreIri($requestContent['parametreIri']);
+            $version->removeParametreIri($parametre);
 
             $validator->validate($version);
 

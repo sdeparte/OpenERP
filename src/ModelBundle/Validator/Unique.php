@@ -9,12 +9,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class Unique extends Constraint
 {
-    public $message = "Un document '{{ class }}' existe déjà avec ces mêmes valeurs de clés.";
+    public string $message = "Un document '{{ class }}' existe déjà avec ces mêmes valeurs de clés.";
 
-    /**
-     * @var string
-     */
-    public $class;
+    public string $class;
 
     /**
      * @var array|string

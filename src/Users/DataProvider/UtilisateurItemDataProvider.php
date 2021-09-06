@@ -11,10 +11,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 
 class UtilisateurItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
     public function __construct(DocumentManager $documentManager)
     {

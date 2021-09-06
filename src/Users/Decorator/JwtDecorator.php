@@ -8,16 +8,8 @@ use ApiPlatform\Core\OpenApi\Model;
 
 class JwtDecorator implements OpenApiFactoryInterface
 {
-    /**
-     * @var OpenApiFactoryInterface
-     */
-    private $decorated;
+    private OpenApiFactoryInterface $decorated;
 
-    /**
-     * JwtDecorator constructor.
-     *
-     * @param OpenApiFactoryInterface $decorated
-     */
     public function __construct(OpenApiFactoryInterface $decorated) {
         $this->decorated = $decorated;
     }

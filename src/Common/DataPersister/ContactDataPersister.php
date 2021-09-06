@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Fournisseurs\DataPersister;
+namespace App\Common\DataPersister;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use ApiPlatform\Core\Validator\ValidatorInterface;
-use App\Fournisseurs\Documents\Tarif;
+use App\Common\Documents\Contact;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class TarifDataPersister implements ContextAwareDataPersisterInterface
+class ContactDataPersister implements ContextAwareDataPersisterInterface
 {
     private DocumentManager $documentManager;
 
@@ -36,11 +36,11 @@ class TarifDataPersister implements ContextAwareDataPersisterInterface
 
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Tarif;
+        return $data instanceof Contact;
     }
 
     /**
-     * @param Tarif $data
+     * @param Contact $data
      */
     public function persist($data, array $context = [])
     {
@@ -49,29 +49,30 @@ class TarifDataPersister implements ContextAwareDataPersisterInterface
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 
-        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/articles/'.$data->getArticleIri()->getId().'/add_tarif', [
-            'body' => '{"tarifIri": "/api/tarifs/'.$data->getId().'"}'
+        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/versions/'.$data->getFromIri()->getId().'/add_contact', [
+            'body' => json_encode(['contactIri' => '/api/contacts/'.$data->getId()]),
         ]);
 
-        if (Response::HTTP_OK !== $response->getStatusCode()) {
+        if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
             $this->documentManager->remove($data);
             $this->documentManager->flush();
 
-            throw new \Exception('Impossible d\'ajouter le tarif dans l\'article.', Response::HTTP_BAD_REQUEST);
+            throw new \Exception('Impossible d\'ajouter le contact.', Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
-     * @param Tarif $data
+     * @param Contact $data
      */
     public function remove($data, array $context = [])
     {
-        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/articles/remove_tarif', [
-            'body' => '{"tarifIri": "/api/tarifs/'.$data->getId().'"}',
+        // @TODO: Passer avec messenger !
+        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/fournisseurs/remove_contact', [
+            'body' => json_encode(['contactIri' => '/api/contacts/'.$data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
-            throw new \Exception('Impossible de supprimer le tarif.', Response::HTTP_BAD_REQUEST);
+            throw new \Exception('Impossible de supprimer le contact.', Response::HTTP_BAD_REQUEST);
         }
 
         $this->documentManager->remove($data);

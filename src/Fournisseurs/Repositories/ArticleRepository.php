@@ -3,11 +3,12 @@
 namespace App\Fournisseurs\Repositories;
 
 use App\Fournisseurs\Documents\Article;
+use App\Fournisseurs\Documents\SousEnsemble;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 class ArticleRepository extends DocumentRepository
 {
-    public function findLastNumOfSousEnsemble(string $sousEnsembleIri): ?Article
+    public function findLastNumOfSousEnsemble(SousEnsemble $sousEnsembleIri): ?Article
     {
         return $this->dm->createQueryBuilder(Article::class)
             ->select('numero')

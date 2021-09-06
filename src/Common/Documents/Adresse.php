@@ -6,92 +6,82 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Adresse
- *
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"adresse:read"}},
+ *     denormalizationContext={"groups"={"adresse:write"}}
+ * )
  *
  * @ODM\Document
  */
 class Adresse
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"adresse:read", "adresse:write"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups({"adresse:read", "adresse:write"})
      */
-    private $adresse;
+    private string $adresse;
+
+    /**
+     * @ODM\Field
+     *
+     * @Groups({"adresse:read", "adresse:write"})
+     */
+    private ?string $adresseSupplement = null;
+
+    /**
+     * @ODM\Field
+     * @Assert\NotBlank
+     *
+     * @Groups({"adresse:read", "adresse:write"})
+     */
+    private string $codePostal;
+
+    /**
+     * @ODM\Field
+     * @Assert\NotBlank
+     *
+     * @Groups({"adresse:read", "adresse:write"})
+     */
+    private string $ville;
 
     /**
      * @var string|null
      *
      * @ODM\Field
+     *
+     * @Groups({"adresse:read", "adresse:write"})
      */
-    private $adresseSupplement = null;
+    private ?string $cedex = null;
 
     /**
-     * @var string
+     * @ODM\ReferenceOne(targetDocument=Pays::class)
      *
-     * @ODM\Field
-     * @Assert\NotBlank
+     * @Groups({"adresse:read", "adresse:write"})
      */
-    private $codePostal;
+    private Pays $paysIri;
 
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Assert\NotBlank
-     */
-    private $ville;
-
-    /**
-     * @var string|null
-     *
-     * @ODM\Field
-     */
-    private $cedex = null;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri("Common")
-     */
-    private $paysIri;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getAdresse(): string
     {
         return $this->adresse;
     }
 
-    /**
-     * @param string $adresse
-     *
-     * @return Adresse
-     */
     public function setAdresse(string $adresse): Adresse
     {
         $this->adresse = $adresse;
@@ -99,19 +89,11 @@ class Adresse
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAdresseSupplement(): ?string
     {
         return $this->adresseSupplement;
     }
 
-    /**
-     * @param string|null $adresseSupplement
-     *
-     * @return Adresse
-     */
     public function setAdresseSupplement(?string $adresseSupplement): Adresse
     {
         $this->adresseSupplement = $adresseSupplement;
@@ -119,19 +101,11 @@ class Adresse
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCodePostal(): string
     {
         return $this->codePostal;
     }
 
-    /**
-     * @param string $codePostal
-     *
-     * @return Adresse
-     */
     public function setCodePostal(string $codePostal): Adresse
     {
         $this->codePostal = $codePostal;
@@ -139,19 +113,11 @@ class Adresse
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getVille(): string
     {
         return $this->ville;
     }
 
-    /**
-     * @param string $ville
-     *
-     * @return Adresse
-     */
     public function setVille(string $ville): Adresse
     {
         $this->ville = $ville;
@@ -159,19 +125,11 @@ class Adresse
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCedex(): ?string
     {
         return $this->cedex;
     }
 
-    /**
-     * @param string|null $cedex
-     *
-     * @return Adresse
-     */
     public function setCedex(?string $cedex): Adresse
     {
         $this->cedex = $cedex;
@@ -179,20 +137,12 @@ class Adresse
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaysIri(): string
+    public function getPaysIri(): Pays
     {
         return $this->paysIri;
     }
 
-    /**
-     * @param string $paysIri
-     *
-     * @return Adresse
-     */
-    public function setPaysIri(string $paysIri): Adresse
+    public function setPaysIri(Pays $paysIri): Adresse
     {
         $this->paysIri = $paysIri;
 

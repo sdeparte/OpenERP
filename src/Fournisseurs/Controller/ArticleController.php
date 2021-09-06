@@ -3,7 +3,7 @@
 namespace App\Fournisseurs\Controller;
 
 use App\Fournisseurs\Documents\Article;
-use App\Fournisseurs\Repositories\ArticleRepository;
+use App\Fournisseurs\Documents\Version;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,16 +26,23 @@ class ArticleController extends AbstractController
      */
     public function addVersion(int $id, DocumentManager $documentManager, ValidatorInterface $validator, Request $request): Response
     {
+        $requestContent = json_decode($request->getContent(), true);
+
         /** @var Article $article */
         $article = $documentManager->getRepository(Article::class)->find($id);
 
         if (empty($article)) {
-            throw new NotFoundHttpException('Article not found');
+            throw new NotFoundHttpException("Article #$id not found");
         }
 
-        $requestContent = json_decode($request->getContent(), true);
+        /** @var Version $version */
+        $version = $documentManager->getRepository(Version::class)->find($requestContent['versionId']);
 
-        $article->addVersionIri($requestContent['versionIri']);
+        if (empty($version)) {
+            throw new NotFoundHttpException('Version #'.$requestContent['versionId'].' not found');
+        }
+
+        $article->addVersionIri($version);
 
         $validator->validate($article);
 
@@ -56,11 +63,18 @@ class ArticleController extends AbstractController
     {
         $requestContent = json_decode($request->getContent(), true);
 
-        $articles = $documentManager->getRepository(Article::class)->findByVersionIri($requestContent['versionIri']);
+        /** @var Version $version */
+        $version = $documentManager->getRepository(Version::class)->find($requestContent['versionId']);
+
+        if (empty($version)) {
+            throw new NotFoundHttpException('Version #'.$requestContent['versionId'].' not found');
+        }
+
+        $articles = $documentManager->getRepository(Article::class)->findByVersionIri($requestContent['versionId']);
 
         /** @var Article $article */
         foreach ($articles as $article) {
-            $article->removeVersionIri($requestContent['versionIri']);
+            $article->removeVersionIri($version);
 
             $validator->validate($article);
 

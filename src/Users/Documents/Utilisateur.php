@@ -16,8 +16,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Utilisateur
- *
  * @ApiResource(
  *     normalizationContext={"groups"={"user:read"}},
  *     denormalizationContext={"groups"={"user:write"}},
@@ -49,109 +47,81 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
-     * @var string
-     *
      * @ODM\Id(strategy="INCREMENT", type="string")
      *
      * @Groups("user:read")
      */
-    private $id;
+    private string $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $pseudonym;
+    private string $pseudonym;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      *
      * @Groups({"user:read", "user:write"})
      * @ApiProperty(identifier=true)
      */
-    private $username;
+    private string $username;
 
     /**
-     * @var string
-     *
      * @SerializedName("password")
      * @Assert\NotBlank(groups={"create"})
      *
      * @Groups("user:write")
      */
-    private $plainPassword;
+    private ?string $plainPassword;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      */
-    private $password;
+    private string $password;
 
     /**
-     * @var string|null
-     *
      * @ODM\Field
      */
-    private $salt = null;
+    private ?string $salt = null;
 
     /**
-     * @var array
-     *
      * @ODM\Field(type="collection")
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $roles = null;
+    private array $roles = [];
 
     /**
-     * @var bool
-     *
      * @ODM\Field(type="boolean")
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $visible = true;
+    private bool $visible = true;
 
     /**
-     * @var bool
-     *
      * @ODM\Field(type="boolean")
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $repondre = true;
+    private bool $repondre = true;
 
     /**
-     * @var string|null
-     *
      * @ODM\Field
-     * @Iri("Employes")
+     * @Iri({"Employe"})
      *
      * @Groups({"user:read", "user:write"})
      */
-    private $employeIri = null;
+    private ?string $employeIri = null;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $pseudonym
-     *
-     * @return Utilisateur
-     */
     public function setPseudonym(string $pseudonym): Utilisateur
     {
         $this->pseudonym = $pseudonym;
@@ -159,19 +129,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPseudonym(): string
     {
         return $this->pseudonym;
     }
 
-    /**
-     * @param string $username
-     *
-     * @return Utilisateur
-     */
     public function setUsername(string $username): Utilisateur
     {
         $this->username = $username;
@@ -179,30 +141,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @param string $name
-     * @param array $arguments
-     *
-     * @return string
-     */
     public function __call(string $name, array $arguments)
     {
         return $this->username;
     }
 
-    /**
-     * @param string $plainPassword
-     *
-     * @return Utilisateur
-     */
     public function setPlainPassword(string $plainPassword): Utilisateur
     {
         $this->plainPassword = $plainPassword;
@@ -210,39 +158,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    /**
-     * @param string|null $password
-     *
-     * @return Utilisateur
-     */
-    public function setPassword(?string $password): Utilisateur
+    public function setPassword(string $password): Utilisateur
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @param string|null $salt
-     *
-     * @return Utilisateur
-     */
     public function setSalt(?string $salt): Utilisateur
     {
         $this->salt = $salt;
@@ -250,19 +182,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSalt(): ?string
     {
         return $this->salt;
     }
 
-    /**
-     * @param array $roles
-     *
-     * @return Utilisateur
-     */
     public function setRoles(array $roles): Utilisateur
     {
         $this->roles = $roles;
@@ -270,19 +194,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    /**
-     * @param boolean $visible
-     *
-     * @return Utilisateur
-     */
     public function setVisible(bool $visible): Utilisateur
     {
         $this->visible = $visible;
@@ -290,19 +206,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getVisible(): bool
     {
         return $this->visible;
     }
 
-    /**
-     * @param boolean $repondre
-     *
-     * @return Utilisateur
-     */
     public function setRepondre(bool $repondre): Utilisateur
     {
         $this->repondre = $repondre;
@@ -310,27 +218,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
     public function getRepondre(): bool
     {
         return $this->repondre;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmployeIri(): ?string
     {
         return $this->employeIri;
     }
 
-    /**
-     * @param string|null $employeIri
-     *
-     * @return Utilisateur
-     */
     public function setEmployeIri(?string $employeIri): Utilisateur
     {
         $this->employeIri = $employeIri;
@@ -338,17 +235,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDisplayName(): string
     {
         return $this->pseudonym.' ('.$this->username.')';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function eraseCredentials()
     {
         $this->plainPassword = null;

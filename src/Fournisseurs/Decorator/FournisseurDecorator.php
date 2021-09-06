@@ -6,7 +6,7 @@ use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
 
-class ArticleDecorator implements OpenApiFactoryInterface
+class FournisseurDecorator implements OpenApiFactoryInterface
 {
     private OpenApiFactoryInterface $decorated;
 
@@ -20,8 +20,8 @@ class ArticleDecorator implements OpenApiFactoryInterface
 
         $this->buildSchema($openApi);
 
-        $openApi->getPaths()->addPath('/api/articles/{id}/add_version', $this->getAddVersionPathItem());
-        $openApi->getPaths()->addPath('/api/articles/remove_version', $this->getRemoveVersionPathItem());
+        $openApi->getPaths()->addPath('/api/fournisseurs/{id}/add_contact', $this->getAddContactPathItem());
+        $openApi->getPaths()->addPath('/api/fournisseurs/remove_contact', $this->getRemoveContactPathItem());
 
         return $openApi;
     }
@@ -29,17 +29,17 @@ class ArticleDecorator implements OpenApiFactoryInterface
     private function buildSchema(OpenApi $openApi) {
         $schemas = $openApi->getComponents()->getSchemas();
 
-        $schemas['Version'] = new \ArrayObject([
+        $schemas['Contact'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'versionId' => [
-                    'type' => 'integer',
+                'contactIri' => [
+                    'type' => 'string',
                 ],
             ],
         ]);
     }
 
-    private function getAddVersionPathItem()
+    private function getAddContactPathItem()
     {
         $parameter = new Model\Parameter(
             'id',
@@ -49,31 +49,31 @@ class ArticleDecorator implements OpenApiFactoryInterface
         );
 
         $requestBody = new Model\RequestBody(
-            'Add Version to Article',
+            'Add Contact to Fournisseur',
             new \ArrayObject([
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/Version',
+                        '$ref' => '#/components/schemas/Contact',
                     ],
                 ],
             ])
         );
 
         return new Model\PathItem(
-            'Add Version to Article',
+            'Add Contact to Fournisseur',
             null,
             null,
             null,
             null,
             new Model\Operation(
-                'postAddVersionToArticleItem',
-                ['Article'],
+                'postAddContactToFournisseurItem',
+                ['Fournisseur'],
                 [
                     '204' => [
-                        'description' => 'Version added to Article',
+                        'description' => 'Contact added to Fournisseur',
                     ],
                 ],
-                'Add Version to Article.',
+                'Add Contact to Fournisseur.',
                 '',
                 null,
                 [$parameter],
@@ -82,34 +82,34 @@ class ArticleDecorator implements OpenApiFactoryInterface
         );
     }
 
-    private function getRemoveVersionPathItem()
+    private function getRemoveContactPathItem()
     {
         $requestBody = new Model\RequestBody(
-            'Remove Version from all Articles',
+            'Remove Contact from all Fournisseurs',
             new \ArrayObject([
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/Version',
+                        '$ref' => '#/components/schemas/Contact',
                     ],
                 ],
             ])
         );
 
         return new Model\PathItem(
-            'Remove Version from all Articles',
+            'Remove Contact from all Fournisseurs',
             null,
             null,
             null,
             null,
             new Model\Operation(
-                'postRemoveVersionToArticleItem',
-                ['Article'],
+                'postRemoveContactToFournisseurItem',
+                ['Fournisseur'],
                 [
                     '204' => [
-                        'description' => 'Version removed from all Articles',
+                        'description' => 'Contact removed from all Fournisseurs',
                     ],
                 ],
-                'Remove Version from all Articles.',
+                'Remove Contact from all Fournisseurs.',
                 '',
                 null,
                 [],

@@ -14,20 +14,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class VersionDataPersister implements ContextAwareDataPersisterInterface
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private ValidatorInterface $validator;
 
     public function __construct(TokenExtractorInterface $tokenExtractor, RequestStack $requestStack, HttpClientInterface $httpClient, DocumentManager $documentManager, ValidatorInterface $validator)
     {
@@ -68,8 +59,8 @@ class VersionDataPersister implements ContextAwareDataPersisterInterface
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 
-        $response = $this->httpClient->request('POST', 'http://api.erp.docker'.$data->getArticleIri().'/add_version', [
-            'body' => '{"versionIri": "/api/versions/'.$data->getId().'"}',
+        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/articles/'.$data->getArticleIri()->getId().'/add_version', [
+            'body' => json_encode(['versionId' => $data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
@@ -86,7 +77,7 @@ class VersionDataPersister implements ContextAwareDataPersisterInterface
     public function remove($data, array $context = [])
     {
         $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/articles/remove_version', [
-            'body' => '{"versionIri": "/api/versions/'.$data->getId().'"}',
+            'body' => json_encode(['versionId' => $data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {

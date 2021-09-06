@@ -8,16 +8,8 @@ use ApiPlatform\Core\OpenApi\Model;
 
 class VersionDecorator implements OpenApiFactoryInterface
 {
-    /**
-     * @var OpenApiFactoryInterface
-     */
-    private $decorated;
+    private OpenApiFactoryInterface $decorated;
 
-    /**
-     * JwtDecorator constructor.
-     *
-     * @param OpenApiFactoryInterface $decorated
-     */
     public function __construct(OpenApiFactoryInterface $decorated) {
         $this->decorated = $decorated;
     }
@@ -28,10 +20,10 @@ class VersionDecorator implements OpenApiFactoryInterface
 
         $this->buildSchema($openApi);
 
-        $openApi->getPaths()->addPath('/versions/{id}/add_reference_fournisseur', $this->getAddReferenceFournisseurPathItem());
-        $openApi->getPaths()->addPath('/versions/remove_reference_fournisseur', $this->getRemoveReferenceFournisseurPathItem());
-        $openApi->getPaths()->addPath('/versions/{id}/add_parametre', $this->getAddParametrePathItem());
-        $openApi->getPaths()->addPath('/versions/remove_parametre', $this->getRemoveParametrePathItem());
+        $openApi->getPaths()->addPath('/api/versions/{id}/add_reference_fournisseur', $this->getAddReferenceFournisseurPathItem());
+        $openApi->getPaths()->addPath('/api/versions/remove_reference_fournisseur', $this->getRemoveReferenceFournisseurPathItem());
+        $openApi->getPaths()->addPath('/api/versions/{id}/add_parametre', $this->getAddParametrePathItem());
+        $openApi->getPaths()->addPath('/api/versions/remove_parametre', $this->getRemoveParametrePathItem());
 
         return $openApi;
     }
@@ -42,8 +34,8 @@ class VersionDecorator implements OpenApiFactoryInterface
         $schemas['ReferenceFournisseur'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'referenceFournisseurIri' => [
-                    'type' => 'string',
+                'referenceFournisseurId' => [
+                    'type' => 'integer',
                 ],
             ],
         ]);
@@ -51,8 +43,11 @@ class VersionDecorator implements OpenApiFactoryInterface
         $schemas['Parametre'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'parametreIri' => [
+                'parametreClass' => [
                     'type' => 'string',
+                ],
+                'parametreId' => [
+                    'type' => 'integer',
                 ],
             ],
         ]);

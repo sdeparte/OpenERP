@@ -3,7 +3,8 @@
 namespace App\Fournisseurs\Serializer;
 
 use App\Fournisseurs\Documents\Article;
-use Symfony\Component\HttpFoundation\Response;
+use App\Fournisseurs\Documents\Version;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
@@ -15,10 +16,13 @@ class ArticleNormalizer implements ContextAwareNormalizerInterface, NormalizerAw
 
     private const ALREADY_CALLED = 'ARTICLE_ATTRIBUTE_NORMALIZER_ALREADY_CALLED';
 
+    private DocumentManager $documentManager;
+
     private HttpClientInterface $httpClient;
 
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(DocumentManager $documentManager, HttpClientInterface $httpClient)
     {
+        $this->documentManager = $documentManager;
         $this->httpClient = $httpClient;
     }
 
@@ -28,23 +32,11 @@ class ArticleNormalizer implements ContextAwareNormalizerInterface, NormalizerAw
         $context[self::ALREADY_CALLED] = true;
 
         $normalized = $this->normalizer->normalize($object, $format, $context);
-
-        $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$object->getSousEnsembleIri());
-
-        if (Response::HTTP_OK === $response->getStatusCode()) {
-            $normalized['sousEnsembleIri'] = \json_decode($response->getContent(), true);
-        }
-
-        $normalized['versionIris'] = [];
-
-        foreach ($object->getVersionIris() as $versionIri) {
-            $response = $this->httpClient->request('GET', 'http://api.erp.docker'.$versionIri);
-
-            if (Response::HTTP_OK === $response->getStatusCode()) {
-                $normalized['versionIris'][] = \json_decode($response->getContent(), true);
-            } else {
-                $normalized['versionIris'][] = $versionIri;
-            }
+        /** @var Version $versionIri */
+        foreach ($object->getVersionIris() as $versionKey => $versionIri) {
+            var_dump(count($versionIri->getReferenceFournisseurIris()));
+            $versionIri2 = $this->documentManager->getRepository(Version::class)->find($versionIri->getId());
+            var_dump(count($versionIri2->getReferenceFournisseurIris()));
         }
 
         return $normalized;
@@ -57,6 +49,6 @@ class ArticleNormalizer implements ContextAwareNormalizerInterface, NormalizerAw
             return false;
         }
 
-        return $data instanceof Article;
+        return false;//$data instanceof Article;
     }
 }

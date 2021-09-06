@@ -8,8 +8,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Domaine
- *
  * @ApiResource
  *
  * @ODM\Document
@@ -18,43 +16,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Domaine
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      */
-    private $nom;
+    private string $nom;
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return Domaine
-     */
     public function setNom(string $nom): Domaine
     {
         $this->nom = $nom;

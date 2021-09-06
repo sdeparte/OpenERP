@@ -8,8 +8,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Contact
- *
  * @ApiResource
  *
  * @ODM\Document
@@ -17,80 +15,55 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Contact
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      */
-    private $nom;
+    private string $nom;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      */
-    private $prenom;
+    private string $prenom;
 
     /**
-     * @var string|null
-     *
+     * @ODM\Field
+     * @Assert\Email
+     */
+    private ?string $mail = null;
+
+    /**
+     * @ODM\Field
+     * @Assert\Regex("/^\+33\(0\)[0-9]*$/", message="Ce champ doit être un numéro de téléphone valide")
+     */
+    private ?string $telephone = null;
+
+    /**
      * @ODM\Field
      */
-    private $mail = null;
+    private ?string $service = null;
 
     /**
-     * @var string|null
-     *
      * @ODM\Field
+     * @Iri({"Client", "Fournisseur", "Employe"})
      */
-    private $telephone = null;
+    private string $fromIri;
 
-    /**
-     * @var string|null
-     *
-     * @ODM\Field
-     */
-    private $service = null;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri({"Client", "Fournisseur"})
-     */
-    private $fromIri;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return Contact
-     */
     public function setNom(string $nom): Contact
     {
         $this->nom = $nom;
@@ -98,19 +71,11 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPrenom(): string
     {
         return $this->prenom;
     }
 
-    /**
-     * @param string $prenom
-     *
-     * @return Contact
-     */
     public function setPrenom(string $prenom): Contact
     {
         $this->prenom = $prenom;
@@ -118,19 +83,11 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMail(): ?string
     {
         return $this->mail;
     }
 
-    /**
-     * @param string|null $mail
-     *
-     * @return Contact
-     */
     public function setMail(?string $mail): Contact
     {
         $this->mail = $mail;
@@ -138,19 +95,11 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
-    /**
-     * @param string|null $telephone
-     *
-     * @return Contact
-     */
     public function setTelephone(?string $telephone): Contact
     {
         $this->telephone = $telephone;
@@ -158,19 +107,11 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getService(): ?string
     {
         return $this->service;
     }
 
-    /**
-     * @param string|null $service
-     *
-     * @return Contact
-     */
     public function setService(?string $service): Contact
     {
         $this->service = $service;
@@ -178,19 +119,11 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFromIri(): string
     {
         return $this->fromIri;
     }
 
-    /**
-     * @param string $fromIri
-     *
-     * @return Contact
-     */
     public function setFromIri(string $fromIri): Contact
     {
         $this->fromIri = $fromIri;

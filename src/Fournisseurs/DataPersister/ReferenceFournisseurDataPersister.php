@@ -13,20 +13,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ReferenceFournisseurDataPersister implements ContextAwareDataPersisterInterface
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private ValidatorInterface $validator;
 
     public function __construct(TokenExtractorInterface $tokenExtractor, RequestStack $requestStack, HttpClientInterface $httpClient, DocumentManager $documentManager, ValidatorInterface $validator)
     {
@@ -58,8 +49,8 @@ class ReferenceFournisseurDataPersister implements ContextAwareDataPersisterInte
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 
-        $response = $this->httpClient->request('POST', 'http://api.erp.docker'.$data->getVersionIri().'/add_reference_fournisseur', [
-            'body' => '{"referenceFournisseurIri": "/api/reference_fournisseurs/'.$data->getId().'"}',
+        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/versions/'.$data->getVersionIri()->getId().'/add_reference_fournisseur', [
+            'body' => json_encode(['referenceFournisseurId' => $data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
@@ -76,7 +67,7 @@ class ReferenceFournisseurDataPersister implements ContextAwareDataPersisterInte
     public function remove($data, array $context = [])
     {
         $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/versions/remove_reference_fournisseur', [
-            'body' => '{"referenceFournisseurIri": "/api/reference_fournisseurs/'.$data->getId().'"}',
+            'body' => json_encode(['referenceFournisseurId' => $data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {

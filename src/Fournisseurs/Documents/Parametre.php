@@ -7,6 +7,7 @@ use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Parametre
@@ -19,70 +20,51 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Parametre
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"article:read", "version:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
+     * @ODM\ReferenceOne(targetDocument=TypeParametre::class)
      *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     * @Assert\NotBlank
+     * @Groups({"article:read", "version:read"})
      */
-    protected $typeIri;
+    protected TypeParametre $typeIri;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
-     */
-    protected $nom;
-
-    /**
-     * @var string
      *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
+     * @Groups({"article:read", "version:read"})
      */
-    protected $versionIri;
+    protected string $nom;
 
     /**
-     * @return int
+     * @ODM\ReferenceOne(targetDocument=Version::class)
+     *
+     * @Groups({"article:read", "version:read"})
      */
+    protected Version $versionIri;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeIri(): string
+    public function getTypeIri(): TypeParametre
     {
         return $this->typeIri;
     }
 
-    /**
-     * @param string $typeIri
-     *
-     * @return Parametre
-     */
-    public function setTypeIri(string $typeIri): Parametre
+    public function setTypeIri(TypeParametre $typeIri): Parametre
     {
         $this->typeIri = $typeIri;
 
         return $this;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return Parametre
-     */
     public function setNom($nom): Parametre
     {
         $this->nom = ucfirst($nom);
@@ -90,28 +72,17 @@ class Parametre
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;
     }
 
-    /**
-     * @return string
-     */
-    public function getVersionIri(): string
+    public function getVersionIri(): Version
     {
         return $this->versionIri;
     }
 
-    /**
-     * @param string $versionIri
-     *
-     * @return Parametre
-     */
-    public function setVersionIri(string $versionIri): Parametre
+    public function setVersionIri(Version $versionIri): Parametre
     {
         $this->versionIri = $versionIri;
 

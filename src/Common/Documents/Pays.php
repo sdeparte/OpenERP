@@ -6,10 +6,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Pays
- *
  * @ApiResource
  *
  * @ODM\Document
@@ -18,43 +17,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Pays
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"adresse:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
-     */
-    private $nom;
-
-    /**
-     * Get id
      *
-     * @return int
+     * @Groups({"adresse:read"})
      */
+    private string $nom;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return Pays
-     */
     public function setNom(string $nom): Pays
     {
         $this->nom = $nom;

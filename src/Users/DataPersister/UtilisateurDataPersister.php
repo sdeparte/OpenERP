@@ -11,15 +11,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class UtilisateurDataPersister implements ContextAwareDataPersisterInterface
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private $passwordHasher;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(DocumentManager $documentManager, UserPasswordHasherInterface $passwordHasher)
     {

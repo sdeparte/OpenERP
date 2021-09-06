@@ -18,66 +18,49 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class ParametreFichier extends Parametre
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"article:read", "version:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups({"article:read", "version:read"})
      */
-    private $description;
+    private string $description;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups({"article:read", "version:read"})
      */
-    private $fichierUrl;
+    private string $fichierUrl;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return ParametreFichier
-     */
     public function setDescription(string $description): ParametreFichier
     {
         $this->description = $description;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFichierUrl(): string
     {
         return $this->fichierUrl;
     }
 
-    /**
-     * @param string $fichierUrl
-     * @return ParametreFichier
-     */
     public function setFichierUrl(string $fichierUrl): ParametreFichier
     {
         $this->fichierUrl = $fichierUrl;

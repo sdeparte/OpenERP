@@ -6,10 +6,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * TypeParametre
- *
  * @ApiResource
  *
  * @ODM\Document
@@ -18,33 +17,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TypeParametre
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"article:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups({"article:read"})
      */
-    private $nom;
+    private string $nom;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return TypeParametre
-     */
     public function setNom($nom): TypeParametre
     {
         $this->nom = ucfirst($nom);
@@ -52,9 +43,6 @@ class TypeParametre
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;

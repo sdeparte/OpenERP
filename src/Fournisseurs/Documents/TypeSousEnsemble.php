@@ -6,10 +6,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * TypeSousEnsemble
- *
  * @ApiResource
  *
  * @ODM\Document
@@ -18,15 +17,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TypeSousEnsemble
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"sousEnsemble:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      * @Assert\Length(
@@ -35,37 +32,31 @@ class TypeSousEnsemble
      *      minMessage = "Veuillez saisire qu'une seul lettre",
      *      maxMessage = "Veuillez saisire qu'une seul lettre"
      * )
+     *
+     * @Groups({"article:read", "sousEnsemble:read"})
      */
-    private $lettre;
+    private string $lettre;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
-     */
-    private $nom;
-
-    /**
-     * @var bool
      *
-     * @ODM\Field(type="boolean")
+     * @Groups({"article:read", "sousEnsemble:read"})
      */
-    private $isAssemblage = false;
+    private string $nom;
 
     /**
-     * @return int
+     * @ODM\Field(type="boolean")
+     *
+     * @Groups({"article:read", "sousEnsemble:read"})
      */
+    private bool $isAssemblage = false;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $lettre
-     *
-     * @return TypeSousEnsemble
-     */
     public function setLettre(string $lettre): TypeSousEnsemble
     {
         $this->lettre = strtoupper($lettre);
@@ -73,19 +64,11 @@ class TypeSousEnsemble
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLettre(): string
     {
         return $this->lettre;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return TypeSousEnsemble
-     */
     public function setNom($nom): TypeSousEnsemble
     {
         $this->nom = ucfirst($nom);
@@ -93,27 +76,16 @@ class TypeSousEnsemble
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;
     }
 
-    /**
-     * @return bool
-     */
     public function isAssemblage(): bool
     {
         return $this->isAssemblage;
     }
 
-    /**
-     * @param bool $isAssemblage
-     *
-     * @return TypeSousEnsemble
-     */
     public function setIsAssemblage(bool $isAssemblage): TypeSousEnsemble
     {
         $this->isAssemblage = $isAssemblage;

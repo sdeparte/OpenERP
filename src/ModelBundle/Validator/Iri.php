@@ -9,20 +9,20 @@ use Symfony\Component\Validator\Constraint;
  */
 class Iri extends Constraint
 {
-    public $message = "'{{ iri }}' n'est pas une IRI valide.";
+    public string $message = "'{{ iri }}' n'est pas une IRI valide.";
 
     /**
-     * Microservice name.
+     * @var array
      */
-    public $microService;
+    public $types;
 
     public function getDefaultOption()
     {
-        return 'microService';
+        return 'types';
     }
 
     public function getRequiredOptions()
     {
-        return ['microService'];
+        return ['types'];
     }
 }

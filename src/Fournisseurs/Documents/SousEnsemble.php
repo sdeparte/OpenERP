@@ -7,36 +7,34 @@ use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * SousEnsemble
- *
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"sousEnsemble:read"}},
+ *     denormalizationContext={"groups"={"sousEnsemble:write"}}
+ * )
  *
  * @ODM\Document
- * @Unique(self::class, fields={"type", "numero"}, message="Un sous ensemble existe déjà avec ces type / numéro.")
+ * @Unique(self::class, fields={"typeIri", "numero"}, message="Un sous ensemble existe déjà avec ces type / numéro.")
  */
 class SousEnsemble
 {
     /**
-     * @var int
-     *
      * @ODM\Id(strategy="INCREMENT", type="int")
+     *
+     * @Groups({"article:read", "sousEnsemble:read"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
+     * @ODM\ReferenceOne(targetDocument=TypeSousEnsemble::class)
      *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
-     * @Assert\NotBlank
+     * @Groups({"article:read", "sousEnsemble:read", "sousEnsemble:write"})
      */
-    private $typeIri;
+    private TypeSousEnsemble $typeIri;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/", message="Ce champ ne peut être composé que de chiffres")
@@ -47,50 +45,36 @@ class SousEnsemble
      *      minMessage = "Veuillez saisire un nombre à 2 chiffres",
      *      maxMessage = "Veuillez saisire un nombre à 2 chiffres"
      * )
+     *
+     * @Groups({"article:read", "sousEnsemble:read", "sousEnsemble:write"})
      */
-    private $numero = '01';
+    private string $numero = '01';
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
+     *
+     * @Groups({"article:read", "sousEnsemble:read", "sousEnsemble:write"})
      */
-    private $nom;
+    private string $nom;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $typeIri
-     *
-     * @return SousEnsemble
-     */
-    public function setTypeIri(string $typeIri): SousEnsemble
+    public function setTypeIri(TypeSousEnsemble $typeIri): SousEnsemble
     {
         $this->typeIri = $typeIri;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeIri(): string
+    public function getTypeIri(): TypeSousEnsemble
     {
         return $this->typeIri;
     }
 
-    /**
-     * @param string $numero
-     *
-     * @return SousEnsemble
-     */
     public function setNumero(string $numero): SousEnsemble
     {
         $this->numero = $numero;
@@ -98,19 +82,11 @@ class SousEnsemble
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNumero(): string
     {
         return $this->numero;
     }
 
-    /**
-     * @param string $nom
-     *
-     * @return SousEnsemble
-     */
     public function setNom($nom): SousEnsemble
     {
         $this->nom = ucfirst($nom);
@@ -118,9 +94,6 @@ class SousEnsemble
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNom(): string
     {
         return $this->nom;

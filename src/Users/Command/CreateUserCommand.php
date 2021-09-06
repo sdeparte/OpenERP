@@ -16,20 +16,11 @@ class CreateUserCommand extends Command
 {
     protected static $defaultName = 'app:create-user';
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private $passwordHasher;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(ValidatorInterface $validator, DocumentManager $documentManager, UserPasswordHasherInterface $passwordHasher)
     {

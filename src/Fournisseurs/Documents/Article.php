@@ -4,13 +4,14 @@ namespace App\Fournisseurs\Documents;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Validator\Iri;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
- * Article
- *
  * @ApiResource(
  *     normalizationContext={"groups"={"article:read"}},
  *     denormalizationContext={"groups"={"article:write"}}
@@ -25,23 +26,18 @@ class Article
      *
      * @ODM\Id(strategy="INCREMENT", type="int")
      *
-     * @Groups("article:read")
+     * @Groups({"article:read"})
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @ODM\Field
-     * @Iri("Fournisseurs")
+     * @ODM\ReferenceOne(targetDocument=SousEnsemble::class)
      *
      * @Groups({"article:read", "article:write"})
      */
-    private $sousEnsembleIri;
+    private SousEnsemble $sousEnsembleIri;
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\Length(
      *      min = 6,
@@ -52,86 +48,64 @@ class Article
      *
      * @Groups({"article:read"})
      */
-    private $numero = "000001";
+    private string $numero = "000001";
 
     /**
-     * @var string
-     *
      * @ODM\Field
      * @Assert\NotBlank
      *
      * @Groups({"article:read", "article:write"})
      */
-    private $decriptionInterne;
+    private string $decriptionInterne;
 
     /**
-     * @var string|null
-     *
      * @ODM\Field
      *
      * @Groups({"article:read", "article:write"})
      */
-    private $decriptionExterne = null;
+    private ?string $decriptionExterne = null;
 
     /**
-     * @var bool
-     *
      * @ODM\Field(type="boolean")
      *
      * @Groups({"article:read", "article:write"})
      */
-    private $valide = false;
+    private bool $valide = false;
 
     /**
-     * @var array
-     *
-     * @ODM\Field(type="collection")
+     * @ODM\EmbedMany(targetDocument=Version::class)
      *
      * @Groups({"article:read"})
      */
-    private $versionIris = [];
+    private Collection $versionIris;
 
-    /**
-     * @return int
-     */
+    public function __construct()
+    {
+        $this->versionIris = new ArrayCollection();
+    }
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getSousEnsembleIri(): string
+    public function getSousEnsembleIri(): SousEnsemble
     {
         return $this->sousEnsembleIri;
     }
 
-    /**
-     * @param string $sousEnsembleIri
-     *
-     * @return Article
-     */
-    public function setSousEnsembleIri(string $sousEnsembleIri): Article
+    public function setSousEnsembleIri(SousEnsemble $sousEnsembleIri): Article
     {
         $this->sousEnsembleIri = $sousEnsembleIri;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNumero(): string
     {
         return $this->numero;
     }
 
-    /**
-     * @param string $numero
-     *
-     * @return Article
-     */
     public function setNumero(string $numero): Article
     {
         $this->numero = $numero;
@@ -139,19 +113,11 @@ class Article
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDecriptionInterne(): string
     {
         return $this->decriptionInterne;
     }
 
-    /**
-     * @param string $decriptionInterne
-     *
-     * @return Article
-     */
     public function setDecriptionInterne(string $decriptionInterne): Article
     {
         $this->decriptionInterne = $decriptionInterne;
@@ -159,19 +125,11 @@ class Article
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDecriptionExterne(): ?string
     {
         return $this->decriptionExterne;
     }
 
-    /**
-     * @param string|null $decriptionExterne
-     *
-     * @return Article
-     */
     public function setDecriptionExterne(?string $decriptionExterne): Article
     {
         $this->decriptionExterne = $decriptionExterne;
@@ -179,54 +137,37 @@ class Article
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isValide(): bool
     {
         return $this->valide;
     }
 
-    /**
-     * @param bool $valide
-     * @return Article
-     */
     public function setValide(bool $valide): Article
     {
         $this->valide = $valide;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getVersionIris(): array
+    public function getVersionIris(): Collection
     {
         return $this->versionIris;
     }
 
-    /**
-     * @param string $versionIri
-     *
-     * @return Article
-     */
-    public function addVersionIri(string $versionIri): Article
+    public function addVersionIri(Version $versionIri): Article
     {
-        if (!\in_array($versionIri, $this->versionIris)) {
-            $this->versionIris[] = $versionIri;
+        if (!$this->versionIris->contains($versionIri)) {
+            $this->versionIris->add($versionIri);
         }
 
         return $this;
     }
 
-    /**
-     * @param string $versionIri
-     *
-     * @return Article
-     */
-    public function removeVersionIri(string $versionIri): Article
+    public function removeVersionIri(Version $versionIri): Article
     {
-        $this->versionIris = \array_diff($this->versionIris, [$versionIri]);
+        if ($this->versionIris->contains($versionIri)) {
+            $this->versionIris->removeElement($versionIri);
+        }
 
         return $this;
     }

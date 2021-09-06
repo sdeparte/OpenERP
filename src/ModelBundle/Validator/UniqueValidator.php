@@ -8,10 +8,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueValidator extends ConstraintValidator
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
     public function __construct(DocumentManager $documentManager) {
         $this->documentManager = $documentManager;

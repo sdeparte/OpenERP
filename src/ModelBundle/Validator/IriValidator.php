@@ -10,10 +10,7 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class IriValidator extends ConstraintValidator
 {
-    /**
-     * @var IriChecker
-     */
-    private $iriExistenceChecker;
+    private IriChecker $iriExistenceChecker;
 
     public function __construct(IriChecker $iriExistenceChecker) {
         $this->iriExistenceChecker = $iriExistenceChecker;
@@ -24,8 +21,8 @@ class IriValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint): void
     {
-        if (empty($constraint->microService)) {
-            throw new \LogicException(sprintf("You must specify 'microService' attribute of '%s'", Unique::class));
+        if (empty($constraint->types)) {
+            throw new \LogicException(sprintf("You must specify 'types' attribute of '%s'", Iri::class));
         }
 
         if (!$value) {
@@ -33,7 +30,7 @@ class IriValidator extends ConstraintValidator
         }
 
         try {
-            $checkedIris = $this->iriExistenceChecker->getIriExistenceStatuses($constraint->microService, is_array($value) ? $value : [$value]);
+            $checkedIris = $this->iriExistenceChecker->getIriExistenceStatuses($constraint->types, is_array($value) ? $value : [$value]);
         } catch (ClientExceptionInterface|ExceptionInterface $e) {
         }
 

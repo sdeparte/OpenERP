@@ -14,20 +14,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ParametreDataPersister implements ContextAwareDataPersisterInterface
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private ValidatorInterface $validator;
 
     public function __construct(TokenExtractorInterface $tokenExtractor, RequestStack $requestStack, HttpClientInterface $httpClient, DocumentManager $documentManager, ValidatorInterface $validator)
     {
@@ -59,19 +50,8 @@ class ParametreDataPersister implements ContextAwareDataPersisterInterface
         $this->documentManager->persist($data);
         $this->documentManager->flush();
 
-        switch (get_class($data))
-        {
-            case ParametreFichier::class:
-                $type = 'parametre_fichiers';
-                break;
-
-            default:
-                $type = 'parametres';
-                break;
-        }
-
-        $response = $this->httpClient->request('POST', 'http://api.erp.docker'.$data->getVersionIri().'/add_parametre', [
-            'body' => '{"parametreIri": "/api/'.$type.'/'.$data->getId().'"}',
+        $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/versions/'.$data->getVersionIri()->getId().'/add_parametre', [
+            'body' => json_encode(['parametreClass' => get_class($data), 'parametreId' => $data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {
@@ -87,19 +67,8 @@ class ParametreDataPersister implements ContextAwareDataPersisterInterface
      */
     public function remove($data, array $context = [])
     {
-        switch (get_class($data))
-        {
-            case ParametreFichier::class:
-                $type = 'parametre_fichiers';
-                break;
-
-            default:
-                $type = 'parametres';
-                break;
-        }
-
         $response = $this->httpClient->request('POST', 'http://api.erp.docker/api/versions/remove_parametre', [
-            'body' => '{"parametreIri": "/api/'.$type.'/'.$data->getId().'"}',
+            'body' => json_encode(['parametreClass' => get_class($data), 'parametreId' => $data->getId()]),
         ]);
 
         if (Response::HTTP_NO_CONTENT !== $response->getStatusCode()) {

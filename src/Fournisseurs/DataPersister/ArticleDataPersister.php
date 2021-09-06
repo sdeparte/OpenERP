@@ -9,10 +9,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 
 class ArticleDataPersister implements ContextAwareDataPersisterInterface
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private DocumentManager $documentManager;
 
     public function __construct(DocumentManager $documentManager)
     {

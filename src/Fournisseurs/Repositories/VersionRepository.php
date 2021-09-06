@@ -2,12 +2,15 @@
 
 namespace App\Fournisseurs\Repositories;
 
+use App\Fournisseurs\Documents\Article;
+use App\Fournisseurs\Documents\Parametre;
+use App\Fournisseurs\Documents\ReferenceFournisseur;
 use App\Fournisseurs\Documents\Version;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 class VersionRepository extends DocumentRepository
 {
-    public function findLastVersionOfArticle(string $articleIri): ?Version
+    public function findLastVersionOfArticle(Article $articleIri): ?Version
     {
         return $this->dm->createQueryBuilder(Version::class)
             ->select('lettre')
@@ -19,7 +22,7 @@ class VersionRepository extends DocumentRepository
             ->getSingleResult();
     }
 
-    public function findByReferenceFournisseurIri(string $referenceFournisseurIri): iterable
+    public function findByReferenceFournisseurIri(ReferenceFournisseur $referenceFournisseurIri): iterable
     {
         return $this->dm->createQueryBuilder(Version::class)
             ->field('referenceFournisseurIris')->equals($referenceFournisseurIri)
@@ -27,7 +30,7 @@ class VersionRepository extends DocumentRepository
             ->execute();
     }
 
-    public function findByParametreIri(string $parametreIri): iterable
+    public function findByParametreIri(Parametre $parametreIri): iterable
     {
         return $this->dm->createQueryBuilder(Version::class)
             ->field('parametreIris')->equals($parametreIri)
