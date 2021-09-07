@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ModelBundle\Checker;
+namespace App\ModelBundle\Iri;
 
 
 use Symfony\Component\HttpFoundation\Response;

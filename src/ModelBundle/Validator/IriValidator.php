@@ -2,7 +2,7 @@
 
 namespace App\ModelBundle\Validator;
 
-use App\ModelBundle\Checker\IriChecker;
+use App\ModelBundle\Iri\IriChecker;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;

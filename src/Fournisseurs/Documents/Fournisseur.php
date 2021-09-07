@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\ModelBundle\Interfaces\ClientFournisseurInterface;
 use App\ModelBundle\Validator\Iri;
 use App\ModelBundle\Validator\Unique;
+use App\ModelBundle\Validator\ValidCompteComptable;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -35,6 +36,15 @@ class Fournisseur implements ClientFournisseurInterface
      * @Groups({"fournisseur:read", "fournisseur:write"})
      */
     private string $nom;
+
+    /**
+     * @ODM\Field
+     * @Iri({"CompteComptable"})
+     * @ValidCompteComptable(ValidCompteComptable::FOURNISSEUR)
+     *
+     * @Groups({"fournisseur:read", "fournisseur:write"})
+     */
+    private string $compteComptableIri;
 
     /**
      * @ODM\Field
@@ -93,6 +103,30 @@ class Fournisseur implements ClientFournisseurInterface
         return $this;
     }
 
+    public function getCompteComptableIri(): string
+    {
+        return $this->compteComptableIri;
+    }
+
+    public function setCompteComptableIri(string $compteComptableIri): Fournisseur
+    {
+        $this->compteComptableIri = $compteComptableIri;
+
+        return $this;
+    }
+
+    public function getAdresseIri(): string
+    {
+        return $this->adresseIri;
+    }
+
+    public function setAdresseIri(string $adresseIri): Fournisseur
+    {
+        $this->adresseIri = $adresseIri;
+
+        return $this;
+    }
+
     public function getDomaineIri(): string
     {
         return $this->domaineIri;
@@ -112,24 +146,6 @@ class Fournisseur implements ClientFournisseurInterface
     public function setConditionPaiement(string $conditionPaiement): Fournisseur
     {
         $this->conditionPaiement = $conditionPaiement;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAdresseIri(): string
-    {
-        return $this->adresseIri;
-    }
-
-    /**
-     * @param string $adresseIri
-     */
-    public function setAdresseIri(string $adresseIri): Fournisseur
-    {
-        $this->adresseIri = $adresseIri;
 
         return $this;
     }

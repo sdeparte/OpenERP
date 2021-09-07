@@ -11,10 +11,7 @@ class Iri extends Constraint
 {
     public string $message = "'{{ iri }}' n'est pas une IRI valide.";
 
-    /**
-     * @var array
-     */
-    public $types;
+    public array $types;
 
     public function getDefaultOption()
     {

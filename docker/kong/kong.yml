@@ -57,3 +57,11 @@ services:
           - /api/versions
           - /api/articles
           - /api/tarifs
+
+  - name: comptabilite
+    url: http://comptabilite.erp.docker
+    routes:
+      - name: comptabilite
+        strip_path: false
+        paths:
+          - /api/compte_comptables

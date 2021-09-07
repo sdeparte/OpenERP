@@ -21,7 +21,7 @@ class Adresse
     /**
      * @ODM\Id(strategy="INCREMENT", type="int")
      *
-     * @Groups({"adresse:read", "adresse:write"})
+     * @Groups({"adresse:read"})
      */
     private int $id;
 

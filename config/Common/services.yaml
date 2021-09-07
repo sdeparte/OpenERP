@@ -3,6 +3,6 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\Common\:
-        resource: '../../src/Common'
-        exclude: '../../src/Common/{Entity,DependencyInjection,Tests,Kernel.php}/'
+    App\Comptabilite\:
+        resource: '../../src/Comptabilite'
+        exclude: '../../src/Comptabilite/{Entity,DependencyInjection,Tests,Kernel.php}/'

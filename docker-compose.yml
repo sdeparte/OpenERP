@@ -44,7 +44,7 @@ services:
       - 127.55.0.10:80:80
       - 127.55.0.10:443:443
     environment:
-      MICRO_SERVICE_URLS: 'http://users.erp.docker/;http://common.erp.docker/;http://employes.erp.docker/;http://fournisseurs.erp.docker/'
+      MICRO_SERVICE_URLS: 'http://users.erp.docker/;http://common.erp.docker/;http://employes.erp.docker/;http://fournisseurs.erp.docker/;http://comptabilite.erp.docker/'
       API_GATEWAY_URLS: 'http://127.55.0.1/;http://api.erp.docker/'
       MICRO_SERVICE_NAME: Documentation
       API_VERSION: 0.0.0
@@ -103,6 +103,20 @@ services:
       - 127.55.0.50:443:443
     environment:
       MICRO_SERVICE_NAME: Fournisseurs
+      API_VERSION: 0.0.0
+
+  comptabilite-api:
+    build: docker/php
+    working_dir: /home/erp
+    volumes:
+      - .:/home/erp
+      - ./docker/php/vhost_comptabilite.conf:/etc/apache2/sites-available/000-default.conf
+    hostname: comptabilite.erp.docker
+    ports:
+      - 127.55.0.100:80:80
+      - 127.55.0.100:443:443
+    environment:
+      MICRO_SERVICE_NAME: Comptabilite
       API_VERSION: 0.0.0
 
 volumes:
